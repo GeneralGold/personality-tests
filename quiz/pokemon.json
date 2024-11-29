@@ -14,13 +14,13 @@
     {
       "text": "How fast do you want to go?",
       "type": "slider",
-      "min": 0,
-      "max": 10,
+      "min": 1,
+      "max": 5,
       "step": 1,
-      "description": "0 being slow, 10 being fast",
+      "description": "1 being slow, 5 being fast",
       "scoreImpact": {
-        "Pikachu": [0, 10],
-        "Charizard": [10, 0]
+        "Pikachu": [1, 5],
+        "Charizard": [5, 1]
       }
     }
   ],
