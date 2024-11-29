@@ -1,19 +1,19 @@
 {
   "title": "Pokemon Personality Quiz",
-  "type": "two-options",  // Quiz type, can be "two-options" or "multiple-options"
+  "type": "two-options",
   "variables": {
     "speed": {
       "name": "Speed",
       "impact": {
-        "Pikachu": 2,  // Pikachu gets a +2 boost for Speed
-        "Charizard": -1  // Charizard gets a -1 boost for Speed
+        "Pikachu": 2,
+        "Charizard": -1
       }
     },
     "power": {
       "name": "Power",
       "impact": {
-        "Pikachu": -1,  // Pikachu gets a -1 boost for Power
-        "Charizard": 3  // Charizard gets a +3 boost for Power
+        "Pikachu": -1,
+        "Charizard": 3
       }
     }
   },
@@ -29,19 +29,19 @@
     },
     {
       "text": "How fast do you want to go?",
-      "type": "slider",  // This question has a slider
+      "type": "slider",
       "min": 0,
       "max": 10,
       "step": 1,
-      "description": "0 being slow, 10 being fast",  // You can add a description to clarify the meaning of the values
-      "scoreImpact": {  // How the slider values affect scores
-        "Pikachu": [0, 10],  // For Pikachu, 0 corresponds to a score of 0, and 10 corresponds to a score of 10
-        "Charizard": [10, 0]  // For Charizard, 0 corresponds to a score of 10, and 10 corresponds to a score of 0
+      "description": "0 being slow, 10 being fast",
+      "scoreImpact": {
+        "Pikachu": [0, 10],
+        "Charizard": [10, 0]
       }
     },
     {
       "text": "Choose your strength trait",
-      "type": "variable-boosting",  // Boosting a variable in the result
+      "type": "variable-boosting",
       "options": [
         { "text": "Speed", "boost": { "speed": 2 } },
         { "text": "Power", "boost": { "power": 3 } }
