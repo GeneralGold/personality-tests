@@ -88,8 +88,13 @@ function renderQuestion(data) {
 // Save the selected answer
 function saveAnswer() {
   const selected = document.querySelector('input[name="answer"]:checked');
-  if (!selected) return false; // No answer selected
-  userAnswers[currentQuestionIndex] = parseInt(selected.value, 10);
+  if (!selected && quizData.questions[currentQuestionIndex].type !== 'slider') return false; // No answer selected for non-slider questions
+  if (quizData.questions[currentQuestionIndex].type === 'slider') {
+    const sliderValue = document.getElementById("slider").value;
+    userAnswers[currentQuestionIndex] = sliderValue; // Save slider value
+  } else {
+    userAnswers[currentQuestionIndex] = parseInt(selected.value, 10); // Save selected option index
+  }
   return true;
 }
 
@@ -100,13 +105,13 @@ document.getElementById("next-btn").addEventListener("click", () => {
     return;
   }
   currentQuestionIndex++;
-  renderQuestion(quizData);  // Make sure to pass quizData when rendering the next question
+  renderQuestion(quizData);  // Pass quizData when rendering the next question
 });
 
 // Handle previous button click
 document.getElementById("prev-btn").addEventListener("click", () => {
   currentQuestionIndex--;
-  renderQuestion(quizData);  // Make sure to pass quizData when rendering the previous question
+  renderQuestion(quizData);  // Pass quizData when rendering the previous question
 });
 
 // Handle quiz submission
