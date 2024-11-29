@@ -1,11 +1,11 @@
-/* Logo styling */
+/* Logo container styling */
 #logo-link {
   display: flex;  /* Flexbox to center the logo */
   justify-content: center;  /* Horizontally center the logo */
   align-items: center;  /* Vertically center the logo */
-  width: 80px;  /* Increase the width of the container */
-  height: 80px;  /* Increase the height of the container */
-  position: absolute;  /* Keep it fixed at the top-left */
+  width: 80px;  /* Width of the border around the logo */
+  height: 80px;  /* Height of the border around the logo */
+  position: absolute;  /* Fixed position at the top-left */
   top: 20px;
   left: 20px;
   border: 3px solid #3498db;  /* Blue border around the logo */
@@ -15,10 +15,13 @@
   overflow: hidden;  /* Hide any part of the logo that overflows the container */
 }
 
+/* Logo styling */
 #logo {
-  width: 100%;  /* Logo takes up full width of the container */
-  height: 100%;  /* Logo takes up full height of the container */
-  object-fit: cover;  /* Ensures the logo fully fills the container without distortion */
+  width: 100%;  /* Logo should fill the full width of the container */
+  height: 100%;  /* Logo should fill the full height of the container */
+  object-fit: cover;  /* Ensure the logo fills the container, maintaining aspect ratio */
+  margin: 0;  /* Remove any margin around the logo */
+  padding: 0;  /* Remove any padding inside the logo */
 }
 
 /* Hover effect for the logo */
