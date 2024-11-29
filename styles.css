@@ -3,39 +3,39 @@
   display: flex;  /* Use Flexbox to center the logo */
   justify-content: center;  /* Horizontally center the logo */
   align-items: center;  /* Vertically center the logo */
-  width: 80px;  /* Explicit width for the container */
-  height: 80px;  /* Explicit height for the container */
-  position: fixed;  /* Fixed positioning at the top-left of the screen */
-  top: 20px;  /* Positioning from top */
-  left: 20px;  /* Positioning from left */
+  width: 80px;  /* Set the container width */
+  height: 80px;  /* Set the container height */
+  position: fixed;  /* Fixed positioning for the logo container */
+  top: 20px;
+  left: 20px;
   border: 3px solid #3498db;  /* Blue border around the logo */
   border-radius: 15px;  /* Rounded corners */
-  overflow: hidden;  /* Hide any overflow content */
-  box-sizing: border-box;  /* Ensure border and padding are inside the container */
-  background-color: #fff;  /* Background color (white) for the logo container */
+  overflow: hidden;  /* Hide overflow */
+  background-color: #3498db;  /* Blue background for the logo container */
+  box-sizing: border-box;  /* Include border and padding in element's size */
 }
 
 /* Logo styling */
 #logo {
-  width: 100%;  /* Make the logo fill 100% of the container width */
-  height: 100%;  /* Make the logo fill 100% of the container height */
-  object-fit: cover;  /* Ensures the logo will cover the area without stretching/distorting */
+  width: 100%;  /* Make the logo fill the container width */
+  height: 100%;  /* Make the logo fill the container height */
+  object-fit: cover;  /* Ensure the logo maintains aspect ratio and fills the space */
   margin: 0;  /* Remove any margin */
   padding: 0;  /* Remove any padding */
 }
 
 /* Hover effect for the logo */
 #logo-link:hover {
-  transform: scale(1.1);  /* Slightly enlarge the logo on hover */
+  transform: scale(1.1);  /* Slightly enlarge the logo */
   box-shadow: 0 0 15px rgba(52, 152, 219, 0.7);  /* Add glowing shadow effect */
 }
 
-/* Styling for question container */
+/* Styling for the question container */
 #question-container {
   text-align: center;  /* Center the question text */
   padding: 20px;
   margin: 20px;
-  max-width: 600px;  /* Limit container width */
+  max-width: 600px;  /* Limit the width of the question container */
   margin-left: auto;
   margin-right: auto;  /* Center the question container */
 }
