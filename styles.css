@@ -1,16 +1,7 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-}
 #app {
   max-width: 600px;
   margin: 0 auto;
   text-align: center;
-}
-button {
-  margin: 10px;
-  padding: 10px 20px;
-  cursor: pointer;
 }
 /* Remove border and grey box from images */
 img {
@@ -21,4 +12,67 @@ img {
   border: none;  /* Ensures there's no border */
   outline: none; /* Removes any outline that may appear around images */
 }
+/* General page styling */
+body {
+  background-color: #060c21;  /* Set background to #060c21 */
+  color: white;               /* Set text color to white */
+  font-family: 'Montserrat', sans-serif; /* Use Montserrat font for the text */
+  margin: 0;
+  padding: 0;
+  font-size: 18px;            /* Default font size for body text */
+  line-height: 1.6;           /* Line spacing for better readability */
+}
+
+/* Styling for question container */
+#question-container h2 {
+  font-size: 2em;  /* Increase font size for questions */
+  margin-bottom: 20px;
+}
+
+#question-container label {
+  font-size: 1.2em;  /* Larger font size for question options */
+  display: block;
+  margin-bottom: 10px;
+}
+
+#question-container img {
+  display: block;
+  margin: 10px auto;
+  max-width: 100%;
+  height: auto;
+  border: none;  /* Remove border around images */
+  outline: none; /* Remove outline if present */
+}
+
+/* Buttons styling */
+button {
+  font-size: 1.2em;  /* Larger font size for buttons */
+  padding: 10px 20px;
+  background-color: #007bff;  /* Button background color */
+  color: white;      /* Button text color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;  /* Button hover effect */
+}
+
+button:disabled {
+  background-color: #ddd;  /* Disabled button appearance */
+  cursor: not-allowed;
+}
+
+/* Styling for the result section */
+#question-container h2 {
+  font-size: 2.5em;  /* Larger font for the result title */
+  margin-bottom: 20px;
+}
+
+#question-container p {
+  font-size: 1.5em;  /* Larger text for the result description */
+  margin-top: 20px;
+}
+
 
