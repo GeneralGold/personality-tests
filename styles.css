@@ -19,7 +19,7 @@
 #logo {
   width: 100%;  /* Logo should fill the full width of the container */
   height: 100%;  /* Logo should fill the full height of the container */
-  object-fit: cover;  /* Ensure the logo fills the container, maintaining aspect ratio */
+  object-fit: fill;  /* Stretch the logo to fill both dimensions */
   margin: 0;  /* Remove any margin around the logo */
   padding: 0;  /* Remove any padding inside the logo */
 }
