@@ -47,23 +47,24 @@ function renderQuestion(data) {
   questionContainer.innerHTML = `
     <h2>${question.text}</h2>
     ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
-    <div>
-      ${question.options
-        .map(
-          (option, index) => `
-        <label>
-          <input type="radio" name="answer" value="${index}" />
-          ${option.text}
-        </label><br/>
-      `
-        )
-        .join("")}
-    </div>
     ${question.type === 'slider' ? `
       <input type="range" id="slider" min="${question.min}" max="${question.max}" step="${question.step}" value="${question.min}" />
       <p id="slider-value">${question.min}</p>
       <p>${question.description || ''}</p>
-    ` : ''}
+    ` : `
+      <div>
+        ${question.options
+          .map(
+            (option, index) => `
+          <label>
+            <input type="radio" name="answer" value="${index}" />
+            ${option.text}
+          </label><br/>
+        `
+          )
+          .join("")}
+      </div>
+    `}
   `;
 
   // Update button visibility
