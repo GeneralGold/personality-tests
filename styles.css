@@ -3,17 +3,17 @@
   display: flex;  /* Use Flexbox to center the logo */
   justify-content: center;  /* Horizontally center the logo */
   align-items: center;  /* Vertically center the logo */
-  width: 80px;  /* Set the container width */
-  height: 80px;  /* Set the container height */
+  width: 60px;  /* Reduced container width */
+  height: 60px;  /* Reduced container height */
   position: fixed;  /* Fixed positioning for the logo container */
-  top: 20px;
-  left: 20px;
-  border: 3px solid #3498db;  /* Blue border around the logo */
-  border-radius: 15px;  /* Rounded corners */
+  top: 10px;  /* Reduced margin from top */
+  left: 10px;  /* Reduced margin from left */
+  border: 2px solid #3498db;  /* Blue border around the logo */
+  border-radius: 10px;  /* Slightly rounded corners */
   background-color: transparent;  /* Transparent background for the logo container */
   box-sizing: border-box;  /* Include border and padding in element's size */
   overflow: hidden;  /* Prevent logo from overflowing the container */
-  z-index: 10; /* Ensure the logo stays on top but doesn’t interfere with content */
+  z-index: 10;  /* Ensure the logo stays on top */
 }
 
 /* Logo styling - ensures the logo fills its container */
@@ -31,7 +31,7 @@
 /* Hover effect for the logo */
 #logo-link:hover {
   transform: scale(1.1);  /* Slightly enlarge the logo */
-  box-shadow: 0 0 15px rgba(52, 152, 219, 0.7);  /* Add glowing shadow effect */
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);  /* Add glowing shadow effect */
 }
 
 /* Styling for the question container */
@@ -42,14 +42,7 @@
   max-width: 600px;  /* Limit the width of the question container */
   margin-left: auto;
   margin-right: auto;  /* Center the question container */
-  margin-top: 120px;  /* Add space below the fixed logo */
-}
-
-/* Ensure consistent spacing for mobile */
-@media (max-width: 600px) {
-  #question-container {
-    margin-top: 100px;  /* Slightly less margin-top for smaller screens */
-  }
+  margin-top: 100px;  /* Adjusted space below the smaller fixed logo */
 }
 
 h2 {
@@ -59,7 +52,7 @@ h2 {
 
 /* General image styling for other images (question/result images) */
 img {
-  max-width: 60%;  /* Limit images to 80% width of their container */
+  max-width: 60%;  /* Limit images to 60% width of their container */
   max-height: 30%;
   height: auto;
   margin: 10px 0;
@@ -106,8 +99,8 @@ button:hover {
 /* For smaller screens */
 @media (max-width: 600px) {
   #logo {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
   }
 
   button {
@@ -119,5 +112,6 @@ button:hover {
   #question-container {
     margin-left: 10px;
     margin-right: 10px;
+    margin-top: 80px;  /* Reduced space below the smaller logo on mobile */
   }
 }
