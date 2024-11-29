@@ -7,18 +7,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">  <!-- Link to your CSS file -->
 </head>
-<body>
+<body style="background-color: #060c21; color: white; font-family: 'Montserrat', sans-serif;">
+
   <!-- Logo wrapped in anchor tag to open website in a new tab -->
   <a href="https://generalgoldyt.com" target="_blank" id="logo-link">
     <img id="logo" src="https://generalgoldyt.com/webhook/GeneralGoldLogo.png" alt="Logo">
   </a>
 
-<div id="question-container"></div>
-<button id="prev-btn" style="display: none;">Previous</button>
-<button id="next-btn">Next</button>
-<button id="submit-btn" style="display: none;">Submit</button>
+  <div id="question-container">
+    <!-- Question content will be dynamically injected here -->
+  </div>
 
-
+  <!-- Button container for previous/next/submit buttons -->
+  <div class="button-container">
+    <button id="prev-btn" style="display: none;">Previous</button>
+    <button id="next-btn">Next</button>
+    <button id="submit-btn" style="display: none;">Submit</button>
+  </div>
 
   <!-- Link to your JavaScript file -->
   <script src="script.js"></script>

@@ -1,105 +1,96 @@
-/* General page styling */
-body {
-  background-color: #060c21;  /* Set background to #060c21 */
-  color: white;               /* Set text color to white */
-  font-family: 'Montserrat', sans-serif; /* Use Montserrat font for the text */
-  margin: 0;
-  padding: 0;
-  font-size: 16px;            /* Slightly smaller font size for body text */
-  line-height: 1.5;           /* Adjusted line height for more compact layout */
-  display: flex;
-  flex-direction: column;     /* Stack content vertically */
-  justify-content: flex-start; /* Align content to the top */
-  align-items: center;
-  height: 100vh;
-  position: relative;         /* Make sure the logo's absolute position is within the body */
-}
-
 /* Logo styling */
 #logo-link {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  display: inline-block;
+  display: block;
+  width: 60px;
+  height: 60px;
+  margin: 20px auto;
+  text-align: center;
 }
 
 #logo {
-  width: 40px;                /* Set width of the logo */
-  height: 40px;               /* Set height of the logo to be square */
-  border-radius: 15px;        /* Make the logo a rounded quadrilateral */
-  object-fit: cover;          /* Ensures the logo image fits nicely inside the rounded container */
-  border: 2px solid #fff;     /* Optional: Add a white border to make the logo stand out */
-  transition: transform 0.3s ease; /* Smooth transform transition for hover effect */
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;  /* Rounded quadrilateral */
+  object-fit: contain;
 }
 
-#logo:hover {
-  transform: scale(1.1);      /* Scale up the logo slightly on hover for a subtle effect */
-}
-
-/* Container for the test content */
-#question-container {
-  width: 80%;                 /* Set width of the container to be wider */
-  max-width: 750px;           /* Max width to prevent it from getting too wide */
-  margin-top: 60px;           /* Add top margin to give space for the logo */
-  padding: 10px;              /* Padding for a better look */
-}
-
-/* Styling for question container */
-#question-container h2 {
-  font-size: 1.8em;             /* Smaller font size for questions */
-  margin-bottom: 15px;          /* Reduced margin */
-}
-
-#question-container label {
-  font-size: 1.1em;             /* Smaller font size for question options */
-  display: block;
-  margin-bottom: 4px;           /* Reduced spacing between answers */
-}
-
-/* Styling for question images */
-#question-container img {
-  display: block;
-  margin: 8px auto;
-  max-width: 100%;
-  height: auto;
-  border: none;
-  outline: none;
-}
-
-/* Styling for buttons */
+/* Button Styling */
 button {
-  font-size: 1.1em;           /* Slightly smaller font size for buttons */
-  padding: 8px 16px;
-  background-color: #007bff;  /* Button background color */
-  color: white;               /* Button text color */
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  color: white;
+  background-color: #3498db;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 15px;           /* Space above buttons */
+  transition: background-color 0.3s;
+  margin: 0 10px;  /* Space between buttons */
+  padding: 10px 20px;
 }
 
 button:hover {
-  background-color: #0056b3;  /* Button hover effect */
+  background-color: #2980b9;
 }
 
-button:disabled {
-  background-color: #ddd;     /* Disabled button appearance */
-  cursor: not-allowed;
+/* For Previous and Next buttons layout */
+button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
 }
 
-/* When the Previous button is hidden, center the Next button */
-button#next-btn {
+/* Styling for the question container */
+#question-container {
+  text-align: center;  /* Centering text */
+  padding: 20px;
+  margin: 20px;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 600px;  /* Limit container width */
   margin-left: auto;
-  margin-right: auto;         /* Center the Next button */
+  margin-right: auto;  /* Center the question container */
 }
 
-/* Styling for the result section */
-#question-container h2 {
-  font-size: 2.2em;           /* Smaller font for the result title */
-  margin-bottom: 15px;
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
-#question-container p {
-  font-size: 1.3em;           /* Smaller text for the result description */
-  margin-top: 15px;
+img {
+  max-width: 80%;  /* Make the images smaller */
+  height: auto;
+  margin: 10px 0;
+}
+
+/* Styling for answer options */
+#question-container label {
+  display: block;
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+input[type="radio"] {
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* For smaller screens */
+@media (max-width: 600px) {
+  #logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  #question-container {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
 }
