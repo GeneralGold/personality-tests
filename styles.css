@@ -49,7 +49,8 @@ h2 {
 
 /* General image styling for other images (question/result images) */
 img {
-  max-width: 80%;  /* Limit images to 80% width of their container */
+  max-width: 60%;  /* Limit images to 80% width of their container */
+  max-height: 30%;
   height: auto;
   margin: 10px 0;
 }
