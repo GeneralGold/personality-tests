@@ -19,9 +19,10 @@
 #logo {
   width: 100%;  /* Make the logo fill the container width */
   height: 100%;  /* Make the logo fill the container height */
-  object-fit: cover;  /* Make sure logo scales while maintaining aspect ratio */
+  object-fit: contain;  /* Ensure the logo scales while maintaining its aspect ratio */
   margin: 0;  /* Remove any margin */
   padding: 0;  /* Remove any padding */
+  box-sizing: border-box;  /* Ensure the padding and borders are accounted for in the sizing */
 }
 
 /* Hover effect for the logo */
