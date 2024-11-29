@@ -62,7 +62,7 @@ function renderQuestion() {
       }
     </div>
     ${question.type === 'slider' ? `
-      <input type="range" id="slider" min="${question.min}" max="${question.max}" step="${question.step}" />
+      <input type="range" id="slider" min="${question.min}" max="${question.max}" step="${question.step}" value="${question.min}" />
       <p id="slider-value">${question.min}</p>
       <p>${question.description || ''}</p>
     ` : ''}
@@ -87,13 +87,25 @@ function renderQuestion() {
   }
 }
 
+
 // Save the selected answer
 function saveAnswer() {
   const selected = document.querySelector('input[name="answer"]:checked');
-  if (!selected) return false; // No answer selected
-  userAnswers[currentQuestionIndex] = parseInt(selected.value, 10);
-  return true;
+  const slider = document.getElementById("slider");
+
+  if (selected) {
+    // For radio-type questions, save the selected option
+    userAnswers[currentQuestionIndex] = parseInt(selected.value, 10);
+  } else if (slider) {
+    // For slider-type questions, save the slider value
+    userAnswers[currentQuestionIndex] = slider.value;
+  } else {
+    return false; // No answer selected
+  }
+
+  return true; // An answer has been selected
 }
+
 
 // Handle next button click
 document.getElementById("next-btn").addEventListener("click", () => {
