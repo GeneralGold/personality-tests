@@ -48,7 +48,7 @@ function renderQuestion() {
     <h2>${question.text}</h2>
     ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
     <div>
-      ${question.options && question.options.length > 0 ? // Check if options are available
+      ${question.type !== 'slider' && question.options ? // Check if it's not a slider and options are available
         question.options
           .map(
             (option, index) => `
@@ -58,7 +58,7 @@ function renderQuestion() {
           </label><br/>
         `
           )
-          .join("") : "" // If no options, return empty string
+          .join("") : "" // If it's a slider, skip rendering options
       }
     </div>
     ${question.type === 'slider' ? `
@@ -86,7 +86,6 @@ function renderQuestion() {
     });
   }
 }
-
 
 // Save the selected answer
 function saveAnswer() {
