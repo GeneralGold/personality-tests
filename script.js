@@ -3,11 +3,10 @@ const urlParams = new URLSearchParams(window.location.search);
 const quizName = urlParams.get('quiz'); // Get the quiz name from the URL
 const quizFile = `./quiz/${quizName}.json`; // Path to the quiz JSON
 
-// Global Variables
+// Variables
 let currentQuestionIndex = 0;
 let userAnswers = [];
-const scores = {}; // To track scores for each result
-let quizData = {}; // Store the quiz data here for global access
+const scores = {}; // Keep track of scores for each result
 
 // Fetch quiz data
 fetch(quizFile)
@@ -20,8 +19,6 @@ fetch(quizFile)
     return response.json();
   })
   .then(data => {
-    quizData = data;  // Store the quiz data globally
-
     // Set the title dynamically from the JSON file
     document.title = data.title || 'Quiz';
 
@@ -31,7 +28,7 @@ fetch(quizFile)
     }
 
     // Render the first question
-    renderQuestion();
+    renderQuestion(data);
   })
   .catch(error => {
     console.error("Error loading quiz data:", error);
@@ -39,8 +36,8 @@ fetch(quizFile)
   });
 
 // Render the current question and answers
-function renderQuestion() {
-  const question = quizData.questions[currentQuestionIndex];
+function renderQuestion(data) {
+  const question = data.questions[currentQuestionIndex];
 
   // Render question text and image (if available)
   const questionContainer = document.getElementById("question-container");
@@ -48,18 +45,18 @@ function renderQuestion() {
     <h2>${question.text}</h2>
     ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
     <div>
-      ${question.type !== 'slider' && question.options ? // Check if it's not a slider and options are available
-        question.options
-          .map(
-            (option, index) => `
-          <label>
-            <input type="radio" name="answer" value="${index}" />
-            ${option.text}
-          </label><br/>
-        `
-          )
-          .join("") : "" // If it's a slider, skip rendering options
-      }
+      ${question.options
+        ? question.options
+            .map(
+              (option, index) => `
+        <label>
+          <input type="radio" name="answer" value="${index}" />
+          ${option.text}
+        </label><br/>
+      `
+            )
+            .join("")
+        : ""}
     </div>
     ${question.type === 'slider' ? `
       <input type="range" id="slider" min="${question.min}" max="${question.max}" step="${question.step}" value="${question.min}" />
@@ -74,8 +71,8 @@ function renderQuestion() {
   const submitBtn = document.getElementById("submit-btn");
 
   prevBtn.style.display = currentQuestionIndex === 0 ? "none" : "inline-block";
-  nextBtn.style.display = currentQuestionIndex < quizData.questions.length - 1 ? "inline-block" : "none";
-  submitBtn.style.display = currentQuestionIndex === quizData.questions.length - 1 ? "inline-block" : "none";
+  nextBtn.style.display = currentQuestionIndex < data.questions.length - 1 ? "inline-block" : "none";
+  submitBtn.style.display = currentQuestionIndex === data.questions.length - 1 ? "inline-block" : "none";
 
   // Add slider value update functionality
   if (question.type === 'slider') {
@@ -90,21 +87,10 @@ function renderQuestion() {
 // Save the selected answer
 function saveAnswer() {
   const selected = document.querySelector('input[name="answer"]:checked');
-  const slider = document.getElementById("slider");
-
-  if (selected) {
-    // For radio-type questions, save the selected option
-    userAnswers[currentQuestionIndex] = parseInt(selected.value, 10);
-  } else if (slider) {
-    // For slider-type questions, save the slider value
-    userAnswers[currentQuestionIndex] = slider.value;
-  } else {
-    return false; // No answer selected
-  }
-
-  return true; // An answer has been selected
+  if (!selected) return false; // No answer selected
+  userAnswers[currentQuestionIndex] = parseInt(selected.value, 10);
+  return true;
 }
-
 
 // Handle next button click
 document.getElementById("next-btn").addEventListener("click", () => {
@@ -112,29 +98,50 @@ document.getElementById("next-btn").addEventListener("click", () => {
     alert("Please select an answer before proceeding.");
     return;
   }
-  // Move to the next question and render it
   currentQuestionIndex++;
-  renderQuestion();  // Ensure we pass the correct data
+  renderQuestion(quizData);
 });
 
 // Handle previous button click
 document.getElementById("prev-btn").addEventListener("click", () => {
   currentQuestionIndex--;
-  renderQuestion();  // Ensure we pass the correct data
+  renderQuestion(quizData);
 });
 
 // Handle quiz submission
 document.getElementById("submit-btn").addEventListener("click", () => {
   // Process the results based on user answers
+  const quizData = JSON.parse(localStorage.getItem('quizData'));
   const results = quizData.results;
+
+  // Reset scores for each result
+  const scores = {};
+  for (const result in results) {
+    scores[result] = 0;
+  }
 
   // Example of tallying scores from user answers
   userAnswers.forEach((answer, index) => {
     const question = quizData.questions[index];
-    const selectedOption = question.options[answer];
-    if (selectedOption) {
-      for (const result in selectedOption.scores) {
-        scores[result] += selectedOption.scores[result];
+
+    if (question.type === 'slider') {
+      // If it's a slider question, the answer is directly a value (not from options)
+      for (const result in results) {
+        if (question.scoreImpact && question.scoreImpact[result]) {
+          // For slider, check if score impact is defined and apply it
+          const [minImpact, maxImpact] = question.scoreImpact[result];
+          const range = question.max - question.min;
+          const impact = minImpact + ((maxImpact - minImpact) * (answer - question.min)) / range;
+          scores[result] += impact;
+        }
+      }
+    } else {
+      // For regular multiple-choice questions, use the options' scores
+      const selectedOption = question.options[answer];
+      if (selectedOption) {
+        for (const result in selectedOption.scores) {
+          scores[result] += selectedOption.scores[result];
+        }
       }
     }
   });
