@@ -96,20 +96,20 @@ document.getElementById("next-btn").addEventListener("click", () => {
     alert("Please select an answer before proceeding.");
     return;
   }
+  // Move to the next question and render it
   currentQuestionIndex++;
-  renderQuestion();
+  renderQuestion(quizData);  // Ensure we pass the correct data
 });
 
 // Handle previous button click
 document.getElementById("prev-btn").addEventListener("click", () => {
   currentQuestionIndex--;
-  renderQuestion();
+  renderQuestion(quizData);  // Ensure we pass the correct data
 });
 
 // Handle quiz submission
 document.getElementById("submit-btn").addEventListener("click", () => {
   // Process the results based on user answers
-  const quizData = JSON.parse(localStorage.getItem('quizData'));
   const results = quizData.results;
 
   // Example of tallying scores from user answers
