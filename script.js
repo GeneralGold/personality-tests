@@ -1,12 +1,12 @@
-// Initialize variables for quiz state
-let currentQuestionIndex = 0;
-let userAnswers = [];
-const scores = {}; // To keep track of scores for each result
-
-// Fetch quiz data based on URL parameters
+// Load JSON data
 const urlParams = new URLSearchParams(window.location.search);
 const quizName = urlParams.get('quiz'); // Get the quiz name from the URL
 const quizFile = `./quiz/${quizName}.json`; // Path to the quiz JSON
+
+// Variables
+let currentQuestionIndex = 0;
+let userAnswers = [];
+const scores = {}; // Keep track of scores for each result
 
 // Fetch quiz data
 fetch(quizFile)
@@ -19,9 +19,6 @@ fetch(quizFile)
     return response.json();
   })
   .then(data => {
-    // Store quiz data in localStorage so it can be accessed later
-    localStorage.setItem('quizData', JSON.stringify(data));
-
     // Set the title dynamically from the JSON file
     document.title = data.title || 'Quiz';
 
@@ -29,6 +26,9 @@ fetch(quizFile)
     for (const result in data.results) {
       scores[result] = 0;
     }
+
+    // Store the quiz data in local storage to use later for submitting
+    localStorage.setItem('quizData', JSON.stringify(data));
 
     // Render the first question
     renderQuestion(data);
@@ -49,14 +49,16 @@ function renderQuestion(data) {
     ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
     <div>
       ${question.options
-        ? question.options.map(
-            (option, index) => `
-              <label>
-                <input type="radio" name="answer" value="${index}" />
-                ${option.text}
-              </label><br/>
-            `
-          ).join("")
+        ? question.options
+            .map(
+              (option, index) => `
+                <label>
+                  <input type="radio" name="answer" value="${index}" />
+                  ${option.text}
+                </label><br/>
+              `
+            )
+            .join("")
         : ""}
     </div>
     ${question.type === 'slider' ? `
@@ -85,20 +87,11 @@ function renderQuestion(data) {
   }
 }
 
-// Save the selected answer (radio or slider)
+// Save the selected answer
 function saveAnswer() {
   const selected = document.querySelector('input[name="answer"]:checked');
-  if (!selected && document.getElementById("slider") === null) {
-    return false; // No answer selected and no slider available
-  }
-
-  if (selected) {
-    userAnswers[currentQuestionIndex] = parseInt(selected.value, 10);
-  } else if (document.getElementById("slider")) {
-    const slider = document.getElementById("slider");
-    userAnswers[currentQuestionIndex] = slider.value;
-  }
-
+  if (!selected && currentQuestionIndex !== 1) return false; // No answer selected, but allow skipping slider
+  userAnswers[currentQuestionIndex] = parseInt(selected ? selected.value : document.getElementById('slider').value, 10);
   return true;
 }
 
@@ -147,4 +140,9 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     <img src="${quizData.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 100%; height: auto;">
     <p>${quizData.results[highestScoreResult].description}</p>
   `;
+
+  // Hide the next, previous, and submit buttons
+  document.getElementById("next-btn").style.display = "none";
+  document.getElementById("prev-btn").style.display = "none";
+  document.getElementById("submit-btn").style.display = "none";
 });
