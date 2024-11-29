@@ -41,6 +41,7 @@ body {
   width: 80%;                 /* Set width of the container to be wider */
   max-width: 750px;           /* Max width to prevent it from getting too wide */
   margin-top: 60px;           /* Add top margin to give space for the logo */
+  padding: 10px;              /* Padding for a better look */
 }
 
 /* Styling for question container */
