@@ -1,0 +1,69 @@
+{
+  "questions": [
+    {
+      "text": "What is your favorite color?",
+      "image": "images/colour.png",
+      "options": [
+        {
+          "text": "Yellow",
+          "scores": {
+            "Pikachu": 2,
+            "Charizard": 0
+          }
+        },
+        {
+          "text": "Red",
+          "scores": {
+            "Pikachu": 0,
+            "Charizard": 2
+          }
+        },
+        {
+          "text": "Both equally",
+          "scores": {
+            "Pikachu": 1,
+            "Charizard": 1
+          }
+        }
+      ]
+    },
+    {
+      "text": "Do you prefer speed or power?",
+      "image": "images/speed.png",
+      "options": [
+        {
+          "text": "Speed",
+          "scores": {
+            "Pikachu": 2,
+            "Charizard": 0
+          }
+        },
+        {
+          "text": "Power",
+          "scores": {
+            "Pikachu": 0,
+            "Charizard": 2
+          }
+        },
+        {
+          "text": "A balance of both",
+          "scores": {
+            "Pikachu": 1,
+            "Charizard": 1
+          }
+        }
+      ]
+    }
+  ],
+  "results": {
+    "Pikachu": {
+      "image": "images/pikachu.png",
+      "description": "You are Pikachu! Energetic, cheerful, and quick."
+    },
+    "Charizard": {
+      "image": "images/charizard.png",
+      "description": "You are Charizard! Powerful, determined, and fiery."
+    }
+  }
+}
+
