@@ -48,6 +48,18 @@ function initializeQuiz(data) {
   window.quizData = data;
 }
 
+const nextBtn = document.getElementById("next-btn");
+
+nextBtn.addEventListener("click", () => {
+  if (!saveAnswer()) {
+    alert("Please select an answer before proceeding.");
+    return;
+  }
+  currentQuestionIndex++;
+  renderQuestion();
+});
+
+
 // Render the current question and answers
 function renderQuestion(data) {
   const question = data.questions[currentQuestionIndex];
@@ -117,6 +129,7 @@ function renderVariableBoosting(question) {
     </div>
   `;
 }
+
 
 // Handle submit button click
 submitBtn.addEventListener("click", () => {

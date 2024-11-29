@@ -21,6 +21,7 @@
     {
       "text": "What is your favorite color?",
       "type": "multiple-choice",
+      "image": "images/colour.png",
       "options": [
         { "text": "Yellow", "scores": { "Pikachu": 2, "Charizard": 0 } },
         { "text": "Red", "scores": { "Pikachu": 0, "Charizard": 2 } },
@@ -30,6 +31,7 @@
     {
       "text": "How fast do you want to go?",
       "type": "slider",
+      "image": "images/fast.png",
       "min": 0,
       "max": 10,
       "step": 1,
@@ -41,6 +43,7 @@
     },
     {
       "text": "Choose your strength trait",
+      "image": "images/speed.png",
       "type": "variable-boosting",
       "options": [
         { "text": "Speed", "boost": { "speed": 2 } },
