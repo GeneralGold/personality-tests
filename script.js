@@ -12,7 +12,7 @@ const testData = {
     },
     {
       text: "Do you prefer speed or power?",
-      image: "images/speed.png.jpg",  // Optional image path
+      image: "images/speed.png",  // Optional image path
       options: [
         { text: "Speed", scores: { Pikachu: 2, Charizard: 0 } },
         { text: "Power", scores: { Pikachu: 0, Charizard: 2 } },
