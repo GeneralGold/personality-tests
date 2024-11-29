@@ -1,30 +1,9 @@
-// Safely get elements by ID
-function getElementByIdSafe(id) {
-  const element = document.getElementById(id);
-  if (!element) {
-    console.error(`Error: element with id "${id}" not found.`);
-  }
-  return element;
-}
-
-// Get elements from the DOM
-const prevBtn = getElementByIdSafe("prev-btn");
-const nextBtn = getElementByIdSafe("next-btn");
-const submitBtn = getElementByIdSafe("submit-btn");
-const questionContainer = getElementByIdSafe("question-container");
-
-// Ensure all elements are found before proceeding
-if (!questionContainer || !prevBtn || !nextBtn || !submitBtn) {
-  console.error("Error: Missing required HTML elements.");
-  return; // Stop script execution if any required element is missing
-}
-
-// Variables for quiz state
+// Initialize variables for quiz state
 let currentQuestionIndex = 0;
 let userAnswers = [];
-const scores = {}; // Keep track of scores for each result
+const scores = {}; // To keep track of scores for each result
 
-// Fetch the quiz data based on the URL query parameter
+// Fetch quiz data based on URL parameters
 const urlParams = new URLSearchParams(window.location.search);
 const quizName = urlParams.get('quiz'); // Get the quiz name from the URL
 const quizFile = `./quiz/${quizName}.json`; // Path to the quiz JSON
@@ -40,6 +19,9 @@ fetch(quizFile)
     return response.json();
   })
   .then(data => {
+    // Store quiz data in localStorage so it can be accessed later
+    localStorage.setItem('quizData', JSON.stringify(data));
+
     // Set the title dynamically from the JSON file
     document.title = data.title || 'Quiz';
 
@@ -61,6 +43,7 @@ function renderQuestion(data) {
   const question = data.questions[currentQuestionIndex];
 
   // Render question text and image (if available)
+  const questionContainer = document.getElementById("question-container");
   questionContainer.innerHTML = `
     <h2>${question.text}</h2>
     ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
@@ -84,6 +67,10 @@ function renderQuestion(data) {
   `;
 
   // Update button visibility
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
+  const submitBtn = document.getElementById("submit-btn");
+
   prevBtn.style.display = currentQuestionIndex === 0 ? "none" : "inline-block";
   nextBtn.style.display = currentQuestionIndex < data.questions.length - 1 ? "inline-block" : "none";
   submitBtn.style.display = currentQuestionIndex === data.questions.length - 1 ? "inline-block" : "none";
@@ -98,7 +85,7 @@ function renderQuestion(data) {
   }
 }
 
-// Save the selected answer
+// Save the selected answer (radio or slider)
 function saveAnswer() {
   const selected = document.querySelector('input[name="answer"]:checked');
   if (!selected && document.getElementById("slider") === null) {
@@ -116,40 +103,45 @@ function saveAnswer() {
 }
 
 // Handle next button click
-nextBtn.addEventListener("click", () => {
+document.getElementById("next-btn").addEventListener("click", () => {
   if (!saveAnswer()) {
     alert("Please select an answer before proceeding.");
     return;
   }
   currentQuestionIndex++;
-  renderQuestion(data);
+  renderQuestion(JSON.parse(localStorage.getItem('quizData')));
 });
 
 // Handle previous button click
-prevBtn.addEventListener("click", () => {
+document.getElementById("prev-btn").addEventListener("click", () => {
   currentQuestionIndex--;
-  renderQuestion(data);
+  renderQuestion(JSON.parse(localStorage.getItem('quizData')));
 });
 
 // Handle quiz submission
-submitBtn.addEventListener("click", () => {
-  // Process the results based on user answers
-  const quizData = JSON.parse(localStorage.getItem('quizData'));
+document.getElementById("submit-btn").addEventListener("click", () => {
+  const quizData = JSON.parse(localStorage.getItem('quizData')); // Ensure quizData is loaded correctly
   const results = quizData.results;
 
-  // Example of tallying scores from user answers
+  // Reset scores before calculating the results
+  const scores = {};
+
+  // Calculate the score based on the user's answers
   userAnswers.forEach((answer, index) => {
     const question = quizData.questions[index];
     const selectedOption = question.options ? question.options[answer] : null;
     if (selectedOption) {
       for (const result in selectedOption.scores) {
-        scores[result] += selectedOption.scores[result];
+        scores[result] = (scores[result] || 0) + selectedOption.scores[result];
       }
     }
   });
 
-  // Display the result with the highest score
+  // Find the result with the highest score
   const highestScoreResult = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+
+  // Display the result
+  const questionContainer = document.getElementById("question-container");
   questionContainer.innerHTML = `
     <h2>Your Result: ${highestScoreResult}</h2>
     <img src="${quizData.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 100%; height: auto;">
