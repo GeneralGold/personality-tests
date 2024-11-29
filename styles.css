@@ -10,15 +10,16 @@
   left: 20px;
   border: 3px solid #3498db;  /* Blue border around the logo */
   border-radius: 15px;  /* Rounded corners */
-  background-color: white;  /* White background for the logo container */
+  background-color: transparent;  /* Transparent background for the logo container */
   box-sizing: border-box;  /* Include border and padding in element's size */
+  overflow: hidden;  /* Prevent logo from overflowing the container */
 }
 
 /* Logo styling */
 #logo {
   width: 100%;  /* Make the logo fill the container width */
   height: 100%;  /* Make the logo fill the container height */
-  object-fit: cover;  /* This will make the logo fill the space without distortion, cropping if needed */
+  object-fit: cover;  /* Make sure logo scales while maintaining aspect ratio */
   margin: 0;  /* Remove any margin */
   padding: 0;  /* Remove any padding */
 }
