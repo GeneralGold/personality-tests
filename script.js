@@ -7,6 +7,7 @@ const quizFile = `./quiz/${quizName}.json`; // Path to the quiz JSON
 let currentQuestionIndex = 0;
 let userAnswers = [];
 const scores = {}; // Keep track of scores for each result
+let quizData = {}; // Store the loaded quiz data
 
 // Fetch quiz data
 fetch(quizFile)
@@ -19,6 +20,8 @@ fetch(quizFile)
     return response.json();
   })
   .then(data => {
+    quizData = data; // Save the quiz data globally
+
     // Set the title dynamically from the JSON file
     document.title = data.title || 'Quiz';
 
@@ -28,7 +31,7 @@ fetch(quizFile)
     }
 
     // Render the first question
-    renderQuestion(data);
+    renderQuestion();
   })
   .catch(error => {
     console.error("Error loading quiz data:", error);
@@ -36,8 +39,8 @@ fetch(quizFile)
   });
 
 // Render the current question and answers
-function renderQuestion(data) {
-  const question = data.questions[currentQuestionIndex];
+function renderQuestion() {
+  const question = quizData.questions[currentQuestionIndex];
 
   // Render question text and image (if available)
   const questionContainer = document.getElementById("question-container");
@@ -71,8 +74,8 @@ function renderQuestion(data) {
   const submitBtn = document.getElementById("submit-btn");
 
   prevBtn.style.display = currentQuestionIndex === 0 ? "none" : "inline-block";
-  nextBtn.style.display = currentQuestionIndex < data.questions.length - 1 ? "inline-block" : "none";
-  submitBtn.style.display = currentQuestionIndex === data.questions.length - 1 ? "inline-block" : "none";
+  nextBtn.style.display = currentQuestionIndex < quizData.questions.length - 1 ? "inline-block" : "none";
+  submitBtn.style.display = currentQuestionIndex === quizData.questions.length - 1 ? "inline-block" : "none";
 
   // Add slider value update functionality
   if (question.type === 'slider') {
@@ -99,19 +102,18 @@ document.getElementById("next-btn").addEventListener("click", () => {
     return;
   }
   currentQuestionIndex++;
-  renderQuestion(quizData);
+  renderQuestion();
 });
 
 // Handle previous button click
 document.getElementById("prev-btn").addEventListener("click", () => {
   currentQuestionIndex--;
-  renderQuestion(quizData);
+  renderQuestion();
 });
 
 // Handle quiz submission
 document.getElementById("submit-btn").addEventListener("click", () => {
   // Process the results based on user answers
-  const quizData = JSON.parse(localStorage.getItem('quizData'));
   const results = quizData.results;
 
   // Reset scores for each result
