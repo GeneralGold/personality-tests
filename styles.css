@@ -115,6 +115,6 @@ button:hover {
   #question-container {
     margin-left: 10px;
     margin-right: 10px;
-    margin-top: 80px;  /* Reduced space below the smaller logo on mobile */
+    margin-top: 50px;  /* Reduced space below the smaller logo on mobile */
   }
 }
