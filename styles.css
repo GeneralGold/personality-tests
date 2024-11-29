@@ -1,63 +1,36 @@
 /* Logo container styling */
 #logo-link {
-  display: flex;  /* Flexbox to center the logo */
+  display: flex;  /* Use Flexbox to center the logo */
   justify-content: center;  /* Horizontally center the logo */
   align-items: center;  /* Vertically center the logo */
-  width: 80px;  /* Width of the border around the logo */
-  height: 80px;  /* Height of the border around the logo */
-  position: absolute;  /* Fixed position at the top-left */
-  top: 20px;
-  left: 20px;
+  width: 80px;  /* Explicit width for the container */
+  height: 80px;  /* Explicit height for the container */
+  position: fixed;  /* Fixed positioning at the top-left of the screen */
+  top: 20px;  /* Positioning from top */
+  left: 20px;  /* Positioning from left */
   border: 3px solid #3498db;  /* Blue border around the logo */
-  border-radius: 15px;  /* Rounded corners for the container */
-  padding: 0;  /* Ensure no padding around the logo */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;  /* Smooth transitions for hover effect */
-  overflow: hidden;  /* Hide any part of the logo that overflows the container */
-  box-sizing: border-box;  /* Ensure padding and borders are included in the element's total size */
+  border-radius: 15px;  /* Rounded corners */
+  overflow: hidden;  /* Hide any overflow content */
+  box-sizing: border-box;  /* Ensure border and padding are inside the container */
+  background-color: #fff;  /* Background color (white) for the logo container */
 }
 
 /* Logo styling */
 #logo {
-  width: 100%;  /* Logo should fill the full width of the container */
-  height: 100%;  /* Logo should fill the full height of the container */
-  object-fit: cover;  /* Make sure the logo covers the entire container */
-  margin: 0;  /* Remove any margin around the logo */
-  padding: 0;  /* Remove any padding inside the logo */
+  width: 100%;  /* Make the logo fill 100% of the container width */
+  height: 100%;  /* Make the logo fill 100% of the container height */
+  object-fit: cover;  /* Ensures the logo will cover the area without stretching/distorting */
+  margin: 0;  /* Remove any margin */
+  padding: 0;  /* Remove any padding */
 }
 
 /* Hover effect for the logo */
 #logo-link:hover {
-  transform: scale(1.1);  /* Slightly enlarge the logo */
+  transform: scale(1.1);  /* Slightly enlarge the logo on hover */
   box-shadow: 0 0 15px rgba(52, 152, 219, 0.7);  /* Add glowing shadow effect */
 }
 
-/* Button Styling */
-button {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
-  color: white;
-  background-color: #3498db;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin: 0 10px;  /* Space between buttons */
-  padding: 10px 20px;
-}
-
-button:hover {
-  background-color: #2980b9;
-}
-
-/* For Previous and Next buttons layout */
-.button-container {
-  display: flex;
-  justify-content: center; /* Center the buttons horizontally */
-  gap: 10px;
-  margin-top: 20px;
-}
-
-/* Styling for the question container */
+/* Styling for question container */
 #question-container {
   text-align: center;  /* Center the question text */
   padding: 20px;
@@ -88,6 +61,32 @@ img {
 input[type="radio"] {
   margin-right: 10px;
   vertical-align: middle;
+}
+
+/* Button Styling */
+button {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  color: white;
+  background-color: #3498db;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 0 10px;  /* Space between buttons */
+  padding: 10px 20px;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+/* For Previous and Next buttons layout */
+.button-container {
+  display: flex;
+  justify-content: center; /* Center the buttons horizontally */
+  gap: 10px;
+  margin-top: 20px;
 }
 
 /* For smaller screens */
