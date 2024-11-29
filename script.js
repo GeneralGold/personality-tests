@@ -3,10 +3,11 @@ const urlParams = new URLSearchParams(window.location.search);
 const quizName = urlParams.get('quiz'); // Get the quiz name from the URL
 const quizFile = `./quiz/${quizName}.json`; // Path to the quiz JSON
 
-// Variables
+// Global Variables
 let currentQuestionIndex = 0;
 let userAnswers = [];
-const scores = {}; // Keep track of scores for each result
+const scores = {}; // To track scores for each result
+let quizData = {}; // Store the quiz data here for global access
 
 // Fetch quiz data
 fetch(quizFile)
@@ -19,6 +20,8 @@ fetch(quizFile)
     return response.json();
   })
   .then(data => {
+    quizData = data;  // Store the quiz data globally
+
     // Set the title dynamically from the JSON file
     document.title = data.title || 'Quiz';
 
@@ -28,7 +31,7 @@ fetch(quizFile)
     }
 
     // Render the first question
-    renderQuestion(data);
+    renderQuestion();
   })
   .catch(error => {
     console.error("Error loading quiz data:", error);
@@ -36,8 +39,8 @@ fetch(quizFile)
   });
 
 // Render the current question and answers
-function renderQuestion(data) {
-  const question = data.questions[currentQuestionIndex];
+function renderQuestion() {
+  const question = quizData.questions[currentQuestionIndex];
 
   // Render question text and image (if available)
   const questionContainer = document.getElementById("question-container");
@@ -69,8 +72,8 @@ function renderQuestion(data) {
   const submitBtn = document.getElementById("submit-btn");
 
   prevBtn.style.display = currentQuestionIndex === 0 ? "none" : "inline-block";
-  nextBtn.style.display = currentQuestionIndex < data.questions.length - 1 ? "inline-block" : "none";
-  submitBtn.style.display = currentQuestionIndex === data.questions.length - 1 ? "inline-block" : "none";
+  nextBtn.style.display = currentQuestionIndex < quizData.questions.length - 1 ? "inline-block" : "none";
+  submitBtn.style.display = currentQuestionIndex === quizData.questions.length - 1 ? "inline-block" : "none";
 
   // Add slider value update functionality
   if (question.type === 'slider') {
@@ -98,13 +101,13 @@ document.getElementById("next-btn").addEventListener("click", () => {
   }
   // Move to the next question and render it
   currentQuestionIndex++;
-  renderQuestion(quizData);  // Ensure we pass the correct data
+  renderQuestion();  // Ensure we pass the correct data
 });
 
 // Handle previous button click
 document.getElementById("prev-btn").addEventListener("click", () => {
   currentQuestionIndex--;
-  renderQuestion(quizData);  // Ensure we pass the correct data
+  renderQuestion();  // Ensure we pass the correct data
 });
 
 // Handle quiz submission
