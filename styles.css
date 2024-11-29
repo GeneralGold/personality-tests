@@ -13,13 +13,14 @@
   padding: 0;  /* Ensure no padding around the logo */
   transition: transform 0.3s ease, box-shadow 0.3s ease;  /* Smooth transitions for hover effect */
   overflow: hidden;  /* Hide any part of the logo that overflows the container */
+  box-sizing: border-box;  /* Ensure padding and borders are included in the element's total size */
 }
 
 /* Logo styling */
 #logo {
   width: 100%;  /* Logo should fill the full width of the container */
   height: 100%;  /* Logo should fill the full height of the container */
-  object-fit: fill;  /* Stretch the logo to fill both dimensions */
+  object-fit: cover;  /* Make sure the logo covers the entire container */
   margin: 0;  /* Remove any margin around the logo */
   padding: 0;  /* Remove any padding inside the logo */
 }
