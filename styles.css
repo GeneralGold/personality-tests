@@ -1,0 +1,14 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+#app {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
