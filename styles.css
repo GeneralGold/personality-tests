@@ -54,10 +54,7 @@ h2 {
 img {
   max-width: 40%;  /* Limit images to 40% width of their container */
   height: auto;  /* Maintain aspect ratio */
-  margin: 10px 0;
-  border: 2px solid #ddd;  /* Optional border for better visibility */
-  border-radius: 10px;  /* Slightly rounded corners */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);  /* Subtle shadow for better aesthetics */
+  margin: 10px 0;  /* Added spacing above and below the image */
 }
 
 /* Styling for answer options */
