@@ -3,8 +3,9 @@
   display: block;
   width: 60px;
   height: 60px;
-  margin: 20px auto;
-  text-align: center;
+  position: absolute; /* Position the logo at the top-left */
+  top: 20px;
+  left: 20px;
 }
 
 #logo {
@@ -33,21 +34,18 @@ button:hover {
 }
 
 /* For Previous and Next buttons layout */
-button-container {
+.button-container {
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Center the buttons horizontally */
   gap: 10px;
   margin-top: 20px;
 }
 
 /* Styling for the question container */
 #question-container {
-  text-align: center;  /* Centering text */
+  text-align: center;  /* Center the question text */
   padding: 20px;
   margin: 20px;
-  background-color: #1a1a1a;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   max-width: 600px;  /* Limit container width */
   margin-left: auto;
   margin-right: auto;  /* Center the question container */
