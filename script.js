@@ -31,7 +31,7 @@ fetch(quizFile)
     }
 
     // Render the first question
-    renderQuestion(data);
+    renderQuestion();
   })
   .catch(error => {
     console.error("Error loading quiz data:", error);
@@ -39,47 +39,47 @@ fetch(quizFile)
   });
 
 // Render the current question and answers
-function renderQuestion(data) {
-  const question = data.questions[currentQuestionIndex];
-
-  // Render question text and image (if available)
+function renderQuestion() {
+  const question = quizData.questions[currentQuestionIndex];
   const questionContainer = document.getElementById("question-container");
+
   if (!questionContainer) {
     console.error('Error: question-container element not found.');
     return;
   }
 
-  questionContainer.innerHTML = `
+  // Render question content based on the type
+  let content = `
     <h2>${question.text}</h2>
     ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
-    ${question.type === 'slider' ? `
+  `;
+
+  if (question.type === 'slider') {
+    content += `
       <input type="range" id="slider" min="${question.min}" max="${question.max}" step="${question.step}" value="${question.min}" />
       <p id="slider-value">${question.min}</p>
       <p>${question.description || ''}</p>
-    ` : `
+    `;
+  } else if (question.type === 'multiple-choice') {
+    content += `
       <div>
         ${question.options
-          .map(
-            (option, index) => `
+          .map((option, index) => `
           <label>
             <input type="radio" name="answer" value="${index}" />
             ${option.text}
           </label><br/>
-        `
-          )
+        `)
           .join("")}
       </div>
-    `}
-  `;
+    `;
+  }
+
+  // Set the content in the container
+  questionContainer.innerHTML = content;
 
   // Update button visibility
-  const prevBtn = document.getElementById("prev-btn");
-  const nextBtn = document.getElementById("next-btn");
-  const submitBtn = document.getElementById("submit-btn");
-
-  prevBtn.style.display = currentQuestionIndex === 0 ? "none" : "inline-block";
-  nextBtn.style.display = currentQuestionIndex < data.questions.length - 1 ? "inline-block" : "none";
-  submitBtn.style.display = currentQuestionIndex === data.questions.length - 1 ? "inline-block" : "none";
+  updateButtonsVisibility();
 
   // Add slider value update functionality
   if (question.type === 'slider') {
@@ -104,6 +104,17 @@ function saveAnswer() {
   return true;
 }
 
+// Update button visibility based on current question index
+function updateButtonsVisibility() {
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
+  const submitBtn = document.getElementById("submit-btn");
+
+  prevBtn.style.display = currentQuestionIndex === 0 ? "none" : "inline-block";
+  nextBtn.style.display = currentQuestionIndex < quizData.questions.length - 1 ? "inline-block" : "none";
+  submitBtn.style.display = currentQuestionIndex === quizData.questions.length - 1 ? "inline-block" : "none";
+}
+
 // Handle next button click
 document.getElementById("next-btn").addEventListener("click", () => {
   if (!saveAnswer()) {
@@ -111,13 +122,13 @@ document.getElementById("next-btn").addEventListener("click", () => {
     return;
   }
   currentQuestionIndex++;
-  renderQuestion(quizData);  // Pass quizData when rendering the next question
+  renderQuestion();
 });
 
 // Handle previous button click
 document.getElementById("prev-btn").addEventListener("click", () => {
   currentQuestionIndex--;
-  renderQuestion(quizData);  // Pass quizData when rendering the previous question
+  renderQuestion();
 });
 
 // Handle quiz submission
