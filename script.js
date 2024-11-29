@@ -14,6 +14,13 @@ if (!quizName) {
     .then((data) => {
       const testData = data;
 
+      // If the title field exists in the JSON, set it as the page title
+      if (testData.title) {
+        document.title = testData.title; // Change the page title
+      } else {
+        document.title = 'The Most Amazing of Quizzes'; // Default title if no title is provided in JSON
+      }
+
       // Variables for managing the quiz state
       let currentQuestionIndex = 0;
       let userAnswers = [];
