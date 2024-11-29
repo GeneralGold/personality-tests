@@ -44,6 +44,11 @@ function renderQuestion(data) {
 
   // Render question text and image (if available)
   const questionContainer = document.getElementById("question-container");
+  if (!questionContainer) {
+    console.error('Error: question-container element not found.');
+    return;
+  }
+
   questionContainer.innerHTML = `
     <h2>${question.text}</h2>
     ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
@@ -148,8 +153,14 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   // Find the result with the highest score
   const highestScoreResult = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
 
-  // Display the result in the question-container
+  // Ensure that the question-container exists before trying to modify it
   const questionContainer = document.getElementById("question-container");
+  if (!questionContainer) {
+    console.error('Error: question-container element not found during submit.');
+    return;
+  }
+
+  // Display the result in the question-container
   questionContainer.innerHTML = `
     <h2>Your Result: ${highestScoreResult}</h2>
     <img src="${quizData.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 100%; height: auto;">
