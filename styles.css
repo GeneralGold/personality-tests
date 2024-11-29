@@ -8,10 +8,11 @@ body {
   font-size: 16px;            /* Slightly smaller font size for body text */
   line-height: 1.5;           /* Adjusted line height for more compact layout */
   display: flex;
-  justify-content: center;
+  flex-direction: column;     /* Stack content vertically */
+  justify-content: flex-start; /* Align content to the top */
   align-items: center;
   height: 100vh;
-  flex-direction: column;     /* Stack content vertically */
+  position: relative;         /* Make sure the logo's absolute position is within the body */
 }
 
 /* Logo styling */
@@ -39,7 +40,7 @@ body {
 #question-container {
   width: 80%;                 /* Set width of the container to be wider */
   max-width: 750px;           /* Max width to prevent it from getting too wide */
-  margin: 0;                  /* Remove margin from top */
+  margin-top: 60px;           /* Add top margin to give space for the logo */
 }
 
 /* Styling for question container */
