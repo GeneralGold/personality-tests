@@ -12,12 +12,13 @@ button {
   padding: 10px 20px;
   cursor: pointer;
 }
+/* Remove border and grey box from images */
 img {
   display: block;
   margin: 10px auto;
   max-width: 100%;
   height: auto;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: none;  /* Ensures there's no border */
+  outline: none; /* Removes any outline that may appear around images */
 }
 
