@@ -6,6 +6,10 @@
   position: absolute; /* Position the logo at the top-left */
   top: 20px;
   left: 20px;
+  border: 3px solid #3498db;  /* Add border around the logo */
+  border-radius: 15px;  /* Rounded quadrilateral */
+  padding: 5px;  /* Some space between the border and the logo */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;  /* Add transition for smooth hover effect */
 }
 
 #logo {
@@ -13,6 +17,12 @@
   height: 100%;
   border-radius: 15px;  /* Rounded quadrilateral */
   object-fit: contain;
+}
+
+/* Hover effect for the logo */
+#logo-link:hover {
+  transform: scale(1.1);  /* Slightly enlarge the logo */
+  box-shadow: 0 0 15px rgba(52, 152, 219, 0.7);  /* Add a glowing shadow effect */
 }
 
 /* Button Styling */
