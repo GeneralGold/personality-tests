@@ -5,15 +5,17 @@
     {
       "text": "What is your favorite color?",
       "type": "multiple-choice",
+      "image": "images/colour.png",
       "options": [
         { "text": "Yellow", "scores": { "Pikachu": 2, "Charizard": 0 } },
         { "text": "Red", "scores": { "Pikachu": 0, "Charizard": 2 } },
-        { "text": "Both equally", "scores": { "Pikachu": 1, "Charizard": 1 } }
+        { "text": "Green", "scores": { "Pikachu": 1, "Charizard": 1 } }
       ]
     },
     {
       "text": "How fast do you want to go?",
       "type": "slider",
+      "image": "images/fast.png",
       "min": 1,
       "max": 5,
       "step": 1,
@@ -22,6 +24,16 @@
         "Pikachu": [1, 5],
         "Charizard": [5, 1]
       }
+    },
+    {
+      "text": "Would you rather have speed or power?",
+      "type": "multiple-choice",
+      "image": "images/speed.png",
+      "options": [
+        { "text": "Speed", "scores": { "Pikachu": 2, "Charizard": 0 } },
+        { "text": "Power", "scores": { "Pikachu": 0, "Charizard": 2 } },
+        { "text": "Accuracy", "scores": { "Pikachu": 1, "Charizard": 1 } }
+      ]
     }
   ],
   "results": {
