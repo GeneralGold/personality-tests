@@ -1,27 +1,10 @@
 {
   "title": "Pokemon Personality Quiz",
   "type": "two-options",
-  "variables": {
-    "speed": {
-      "name": "Speed",
-      "impact": {
-        "Pikachu": 2,
-        "Charizard": -1
-      }
-    },
-    "power": {
-      "name": "Power",
-      "impact": {
-        "Pikachu": -1,
-        "Charizard": 3
-      }
-    }
-  },
   "questions": [
     {
       "text": "What is your favorite color?",
       "type": "multiple-choice",
-      "image": "images/colour.png",
       "options": [
         { "text": "Yellow", "scores": { "Pikachu": 2, "Charizard": 0 } },
         { "text": "Red", "scores": { "Pikachu": 0, "Charizard": 2 } },
@@ -31,7 +14,6 @@
     {
       "text": "How fast do you want to go?",
       "type": "slider",
-      "image": "images/fast.png",
       "min": 0,
       "max": 10,
       "step": 1,
@@ -40,15 +22,6 @@
         "Pikachu": [0, 10],
         "Charizard": [10, 0]
       }
-    },
-    {
-      "text": "Choose your strength trait",
-      "image": "images/speed.png",
-      "type": "variable-boosting",
-      "options": [
-        { "text": "Speed", "boost": { "speed": 2 } },
-        { "text": "Power", "boost": { "power": 3 } }
-      ]
     }
   ],
   "results": {
