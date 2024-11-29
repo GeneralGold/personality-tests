@@ -6,6 +6,7 @@ const quizFile = `./quiz/${quizName}.json`; // Path to the quiz JSON
 // Variables
 let currentQuestionIndex = 0;
 let userAnswers = [];
+let quizStarted = false; // Track if the quiz has started
 const scores = {}; // Keep track of scores for each result
 
 // Fetch quiz data
@@ -30,13 +31,35 @@ fetch(quizFile)
     // Store the quiz data in local storage to use later for submitting
     localStorage.setItem('quizData', JSON.stringify(data));
 
-    // Render the first question
-    renderQuestion(data);
+    // Render the landing page
+    renderLandingPage(data);
   })
   .catch(error => {
     console.error("Error loading quiz data:", error);
     alert("Failed to load quiz data.");
   });
+
+// Render the landing page
+function renderLandingPage(data) {
+  const questionContainer = document.getElementById("question-container");
+  questionContainer.innerHTML = `
+    <h1>${data.title}</h1>
+    ${data.landingImage ? `<img src="${data.landingImage}" alt="Quiz Image" style="max-width: 100%; height: auto;">` : ""}
+    <p>${data.description || ''}</p>
+    <button id="play-btn" style="margin-top: 20px; padding: 10px 20px; font-size: 16px;">Play</button>
+  `;
+
+  // Add event listener to the play button
+  document.getElementById("play-btn").addEventListener("click", () => {
+    quizStarted = true;
+    renderQuestion(JSON.parse(localStorage.getItem('quizData')));
+  });
+
+  // Hide navigation buttons initially
+  document.getElementById("prev-btn").style.display = "none";
+  document.getElementById("next-btn").style.display = "none";
+  document.getElementById("submit-btn").style.display = "none";
+}
 
 // Render the current question and answers
 function renderQuestion(data) {

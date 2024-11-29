@@ -1,5 +1,7 @@
 {
   "title": "Pokemon Personality Quiz",
+  "description": "You better end up with the right Pokémon... Otherwise I will have to kill you!",
+  "landingImage": "images/pokemon.png",
   "type": "two-options",
   "questions": [
     {
