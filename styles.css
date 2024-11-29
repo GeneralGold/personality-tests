@@ -3,12 +3,12 @@
   display: flex;  /* Use Flexbox to center the logo */
   justify-content: center;  /* Horizontally center the logo */
   align-items: center;  /* Vertically center the logo */
-  width: 50px;  /* Reduced container width */
-  height: 50px;  /* Reduced container height */
+  width: 50px;  /* Set the container width */
+  height: 50px;  /* Set the container height */
   position: fixed;  /* Fixed positioning for the logo container */
   top: 10px;  /* Reduced margin from top */
   left: 10px;  /* Reduced margin from left */
-  border: 2px solid #3498db;  /* Blue border around the logo */
+  border: 0.1em solid #3498db;  /* Border size scales with container */
   border-radius: 10px;  /* Slightly rounded corners */
   background-color: transparent;  /* Transparent background for the logo container */
   box-sizing: border-box;  /* Include border and padding in element's size */
@@ -97,9 +97,15 @@ button:hover {
 
 /* For smaller screens */
 @media (max-width: 600px) {
+  #logo-link {
+    width: 30px;  /* Adjust container width */
+    height: 30px;  /* Adjust container height */
+    border: 0.08em solid #3498db;  /* Scale border size with container */
+  }
+
   #logo {
-    width: 30px;
-    height: 30px;
+    width: 100%;  /* Ensure the logo scales proportionally */
+    height: 100%;
   }
 
   img {
