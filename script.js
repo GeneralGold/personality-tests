@@ -78,6 +78,15 @@ function renderQuestion() {
       : "none";
 }
 
+// Function to save the answer
+function saveAnswer() {
+  const selected = document.querySelector('input[name="answer"]:checked');
+  if (!selected) return null; // No answer selected
+  userAnswers[currentQuestionIndex] = parseInt(selected.value, 10);
+  return true;
+}
+
+// Handle submit button click
 submitBtn.addEventListener("click", () => {
   if (!saveAnswer()) {
     alert("Please select an answer before submitting.");
@@ -112,15 +121,6 @@ submitBtn.addEventListener("click", () => {
   submitBtn.style.display = "none";
 });
 
-
-// Update the user's selected answer
-function saveAnswer() {
-  const selected = document.querySelector('input[name="answer"]:checked');
-  if (!selected) return null; // No answer selected
-  userAnswers[currentQuestionIndex] = parseInt(selected.value, 10);
-  return true;
-}
-
 // Handle next button click
 nextBtn.addEventListener("click", () => {
   if (!saveAnswer()) {
@@ -137,8 +137,5 @@ prevBtn.addEventListener("click", () => {
   renderQuestion();
 });
 
-
-
 // Initialize the test
 renderQuestion();
-
