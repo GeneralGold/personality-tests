@@ -3,22 +3,22 @@
   display: flex;  /* Flexbox to help center the image */
   justify-content: center;  /* Horizontally center the logo */
   align-items: center;  /* Vertically center the logo */
-  width: 60px;
-  height: 60px;
+  width: 60px;  /* Size of the border container */
+  height: 60px;  /* Size of the border container */
   position: absolute;  /* Position the logo at the top-left */
   top: 20px;
   left: 20px;
   border: 3px solid #3498db;  /* Add border around the logo */
   border-radius: 15px;  /* Rounded quadrilateral */
-  padding: 0;  /* Ensure no extra space around the logo */
+  padding: 0;  /* No padding, logo should fill the border */
   transition: transform 0.3s ease, box-shadow 0.3s ease;  /* Transition for smooth hover effect */
-  overflow: hidden;  /* Prevent logo from spilling outside the container */
+  overflow: hidden;  /* Prevent the logo from overflowing outside the container */
 }
 
 #logo {
-  width: 100%;  /* Logo will scale to the container's width */
-  height: 100%;  /* Logo will scale to the container's height */
-  object-fit: contain;  /* Ensure the logo maintains its aspect ratio */
+  width: 100%;  /* Logo should take up the full width of the container */
+  height: 100%;  /* Logo should take up the full height of the container */
+  object-fit: cover;  /* Ensures the logo fills the container, maintaining aspect ratio */
 }
 
 /* Hover effect for the logo */
