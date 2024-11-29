@@ -89,6 +89,14 @@ function renderQuestion() {
 
 // Save the selected answer
 function saveAnswer() {
+  const question = quizData.questions[currentQuestionIndex];
+
+  if (question.type === 'slider') {
+    const slider = document.getElementById("slider");
+    userAnswers[currentQuestionIndex] = slider.value; // Use the slider value as the answer
+    return true; // Return true since the slider value is considered an answer
+  }
+
   const selected = document.querySelector('input[name="answer"]:checked');
   if (!selected) return false; // No answer selected
   userAnswers[currentQuestionIndex] = parseInt(selected.value, 10);
