@@ -3,6 +3,7 @@ const testData = {
   questions: [
     {
       text: "What is your favorite color?",
+      image: "images/colour.png",  // Optional image path
       options: [
         { text: "Yellow", scores: { Pikachu: 2, Charizard: 0 } },
         { text: "Red", scores: { Pikachu: 0, Charizard: 2 } },
@@ -11,6 +12,7 @@ const testData = {
     },
     {
       text: "Do you prefer speed or power?",
+      image: "images/speed.png.jpg",  // Optional image path
       options: [
         { text: "Speed", scores: { Pikachu: 2, Charizard: 0 } },
         { text: "Power", scores: { Pikachu: 0, Charizard: 2 } },
@@ -18,7 +20,16 @@ const testData = {
       ]
     }
   ],
-  results: ["Pikachu", "Charizard"]
+  results: {
+    Pikachu: {
+      image: "images/pikachu.png",  // Optional image path
+      description: "You are Pikachu! Energetic, cheerful, and quick."
+    },
+    Charizard: {
+      image: "images/charizard.png",  // Optional image path
+      description: "You are Charizard! Powerful, determined, and fiery."
+    }
+  }
 };
 
 // Variables
