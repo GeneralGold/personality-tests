@@ -21,38 +21,51 @@ body {
   padding: 0;
   font-size: 18px;            /* Default font size for body text */
   line-height: 1.6;           /* Line spacing for better readability */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container for the test content */
+#question-container {
+  width: 80%;                 /* Set width of the container to be wider */
+  max-width: 800px;           /* Max width to prevent it from getting too wide */
+  margin: 20px;               /* Add margin to the container */
 }
 
 /* Styling for question container */
 #question-container h2 {
-  font-size: 2em;  /* Increase font size for questions */
+  font-size: 2em;             /* Increase font size for questions */
   margin-bottom: 20px;
 }
 
 #question-container label {
-  font-size: 1.2em;  /* Larger font size for question options */
+  font-size: 1.2em;           /* Larger font size for question options */
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 5px;         /* Reduced spacing between answers */
 }
 
+/* Styling for question images */
 #question-container img {
   display: block;
   margin: 10px auto;
   max-width: 100%;
   height: auto;
-  border: none;  /* Remove border around images */
-  outline: none; /* Remove outline if present */
+  border: none;               /* Remove border around images */
+  outline: none;              /* Remove outline if present */
 }
 
-/* Buttons styling */
+/* Styling for buttons */
 button {
-  font-size: 1.2em;  /* Larger font size for buttons */
+  font-size: 1.2em;           /* Larger font size for buttons */
   padding: 10px 20px;
   background-color: #007bff;  /* Button background color */
-  color: white;      /* Button text color */
+  color: white;               /* Button text color */
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 20px;           /* Space above buttons */
 }
 
 button:hover {
@@ -60,19 +73,17 @@ button:hover {
 }
 
 button:disabled {
-  background-color: #ddd;  /* Disabled button appearance */
+  background-color: #ddd;     /* Disabled button appearance */
   cursor: not-allowed;
 }
 
 /* Styling for the result section */
 #question-container h2 {
-  font-size: 2.5em;  /* Larger font for the result title */
+  font-size: 2.5em;           /* Larger font for the result title */
   margin-bottom: 20px;
 }
 
 #question-container p {
-  font-size: 1.5em;  /* Larger text for the result description */
+  font-size: 1.5em;           /* Larger text for the result description */
   margin-top: 20px;
 }
-
-
