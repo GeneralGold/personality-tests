@@ -13,6 +13,7 @@
   background-color: transparent;  /* Transparent background for the logo container */
   box-sizing: border-box;  /* Include border and padding in element's size */
   overflow: hidden;  /* Prevent logo from overflowing the container */
+  z-index: 10; /* Ensure the logo stays on top but doesn’t interfere with content */
 }
 
 /* Logo styling - ensures the logo fills its container */
@@ -41,6 +42,14 @@
   max-width: 600px;  /* Limit the width of the question container */
   margin-left: auto;
   margin-right: auto;  /* Center the question container */
+  margin-top: 120px;  /* Add space below the fixed logo */
+}
+
+/* Ensure consistent spacing for mobile */
+@media (max-width: 600px) {
+  #question-container {
+    margin-top: 100px;  /* Slightly less margin-top for smaller screens */
+  }
 }
 
 h2 {
