@@ -15,14 +15,15 @@
   overflow: hidden;  /* Prevent logo from overflowing the container */
 }
 
-/* Logo styling */
+/* Logo styling - ensures the logo fills its container */
 #logo {
-  width: 100%;  /* Make the logo fill the container width */
-  height: 100%;  /* Make the logo fill the container height */
-  object-fit: cover;  /* Ensure the logo covers the container and fills it */
+  width: 100%;  /* Ensure logo fills the container's width */
+  height: 100%;  /* Ensure logo fills the container's height */
+  object-fit: cover;  /* Ensure logo covers the container, clipping if necessary */
   margin: 0;  /* Remove any margin */
   padding: 0;  /* Remove any padding */
-  box-sizing: border-box;  /* Ensure the padding and borders are accounted for in the sizing */
+  box-sizing: border-box;  /* Ensure padding and borders are part of the box size */
+  max-width: 100%;
 }
 
 /* Hover effect for the logo */
@@ -46,8 +47,9 @@ h2 {
   margin-bottom: 20px;
 }
 
+/* General image styling for other images (question/result images) */
 img {
-  max-width: 80%;  /* Make the images smaller */
+  max-width: 80%;  /* Limit images to 80% width of their container */
   height: auto;
   margin: 10px 0;
 }
