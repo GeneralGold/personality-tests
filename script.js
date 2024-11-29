@@ -34,8 +34,11 @@ const submitBtn = document.getElementById("submit-btn");
 // Render the current question and answers
 function renderQuestion() {
   const question = testData.questions[currentQuestionIndex];
+
+  // Render question text and image (if available)
   questionContainer.innerHTML = `
     <h2>${question.text}</h2>
+    ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
     <div>
       ${question.options
         .map(
@@ -64,6 +67,41 @@ function renderQuestion() {
       : "none";
 }
 
+submitBtn.addEventListener("click", () => {
+  if (!saveAnswer()) {
+    alert("Please select an answer before submitting.");
+    return;
+  }
+
+  // Calculate the final scores
+  userAnswers.forEach((answerIndex, questionIndex) => {
+    const selectedOption = testData.questions[questionIndex].options[answerIndex];
+    for (const key in selectedOption.scores) {
+      scores[key] += selectedOption.scores[key];
+    }
+  });
+
+  // Determine the result
+  const maxScore = Math.max(...Object.values(scores));
+  const topResults = Object.keys(scores).filter((key) => scores[key] === maxScore);
+  const finalResult =
+    topResults.length > 1
+      ? topResults[Math.floor(Math.random() * topResults.length)]
+      : topResults[0];
+
+  // Display the result with image and description
+  const resultData = testData.results[finalResult];
+  questionContainer.innerHTML = `
+    <h2>Your result is: ${finalResult}!</h2>
+    ${resultData.image ? `<img src="${resultData.image}" alt="${finalResult} Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
+    <p>${resultData.description}</p>
+  `;
+  prevBtn.style.display = "none";
+  nextBtn.style.display = "none";
+  submitBtn.style.display = "none";
+});
+
+
 // Update the user's selected answer
 function saveAnswer() {
   const selected = document.querySelector('input[name="answer"]:checked');
@@ -88,35 +126,7 @@ prevBtn.addEventListener("click", () => {
   renderQuestion();
 });
 
-// Handle submit button click
-submitBtn.addEventListener("click", () => {
-  if (!saveAnswer()) {
-    alert("Please select an answer before submitting.");
-    return;
-  }
 
-  // Calculate the final scores
-  userAnswers.forEach((answerIndex, questionIndex) => {
-    const selectedOption = testData.questions[questionIndex].options[answerIndex];
-    for (const key in selectedOption.scores) {
-      scores[key] += selectedOption.scores[key];
-    }
-  });
-
-  // Determine the result
-  const maxScore = Math.max(...Object.values(scores));
-  const topResults = Object.keys(scores).filter((key) => scores[key] === maxScore);
-  const finalResult =
-    topResults.length > 1
-      ? topResults[Math.floor(Math.random() * topResults.length)]
-      : topResults[0];
-
-  // Display the result
-  questionContainer.innerHTML = `<h2>Your result is: ${finalResult}!</h2>`;
-  prevBtn.style.display = "none";
-  nextBtn.style.display = "none";
-  submitBtn.style.display = "none";
-});
 
 // Initialize the test
 renderQuestion();
