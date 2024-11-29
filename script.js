@@ -48,16 +48,18 @@ function renderQuestion() {
     <h2>${question.text}</h2>
     ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
     <div>
-      ${question.options
-        .map(
-          (option, index) => `
-        <label>
-          <input type="radio" name="answer" value="${index}" />
-          ${option.text}
-        </label><br/>
-      `
-        )
-        .join("")}
+      ${question.options && question.options.length > 0 ? // Check if options are available
+        question.options
+          .map(
+            (option, index) => `
+          <label>
+            <input type="radio" name="answer" value="${index}" />
+            ${option.text}
+          </label><br/>
+        `
+          )
+          .join("") : "" // If no options, return empty string
+      }
     </div>
     ${question.type === 'slider' ? `
       <input type="range" id="slider" min="${question.min}" max="${question.max}" step="${question.step}" />
