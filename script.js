@@ -255,38 +255,43 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     <canvas id="result-pie-chart" width="400" height="400"></canvas>
   `;
 
-  // Create the pie chart
+  // Ensure the canvas element exists before initializing the chart
   const ctx = document.getElementById('result-pie-chart').getContext('2d');
-  const resultPieChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: Object.keys(scores), // Use dynamic result names (Top, Switch, Bottom, etc.)
-      datasets: [{
-        label: 'Result Distribution',
-        data: Object.values(percentages), // Use dynamic percentage values
-        backgroundColor: ['#FF5733', '#33FF57', '#3357FF'], // Dynamic colors for each result
-        borderColor: ['#FF5733', '#33FF57', '#3357FF'],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label: function(tooltipItem) {
-              const label = tooltipItem.label;
-              const value = tooltipItem.raw.toFixed(2) + '%';
-              return label + ': ' + value;
+  if (ctx) {
+    // Create the pie chart
+    const resultPieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: Object.keys(scores), // Use dynamic result names (Top, Switch, Bottom, etc.)
+        datasets: [{
+          label: 'Result Distribution',
+          data: Object.values(percentages), // Use dynamic percentage values
+          backgroundColor: ['#FF5733', '#33FF57', '#3357FF'], // Dynamic colors for each result
+          borderColor: ['#FF5733', '#33FF57', '#3357FF'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(tooltipItem) {
+                const label = tooltipItem.label;
+                const value = tooltipItem.raw.toFixed(2) + '%';
+                return label + ': ' + value;
+              }
             }
+          },
+          legend: {
+            position: 'top',
           }
-        },
-        legend: {
-          position: 'top',
         }
       }
-    }
-  });
+    });
+  } else {
+    console.error('Error: The canvas element is missing or cannot be accessed.');
+  }
 
   // Hide the next, previous, and submit buttons
   document.getElementById("next-btn").style.display = "none";
