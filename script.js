@@ -47,7 +47,7 @@ function renderLandingPage(data) {
       ${data.description ? `<p>${data.description}</p>` : ""}
       ${
         data.image
-          ? `<img src="${data.image}" alt="Quiz Image" style="max-width: 100%; height: auto; margin: 10px 0;">`
+          ? `<img src="${data.image}" alt="Quiz Image" style="max-width: 80%; height: auto; margin: 10px auto; display: block;">`
           : ""
       }
       <button id="start-btn">Start Quiz</button>
@@ -95,7 +95,7 @@ function renderStandardQuestion(question) {
     <h2>${question.text}</h2>
     ${
       question.image
-        ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">`
+        ? `<img src="${question.image}" alt="Question Image" style="max-width: 80%; height: auto; margin: 10px auto; display: block;">`
         : ""
     }
     <div>
@@ -259,7 +259,7 @@ document.getElementById("submit-btn").addEventListener("click", () => {
 
   resultContainer.innerHTML = `
     <h2>Your Result: ${highestScoreResult}</h2>
-    <img src="${quizData.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 100%; height: auto;">
+    <img src="${quizData.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 80%; height: auto; margin: 10px auto; display: block;">
     <p>${quizData.results[highestScoreResult].description}</p>
   `;
 });
