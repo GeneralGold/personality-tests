@@ -134,44 +134,31 @@ function renderQuestion(data) {
   }
 }
 
-// Save the selected answer
 function saveAnswer() {
   const question = JSON.parse(localStorage.getItem('quizData')).questions[currentQuestionIndex];
 
-  // If it's a rank question, check if the order has been changed
+  // For rank questions, make sure the order has been set
   if (question.type === 'rank') {
-    const rankList = document.getElementById('rank-list'); // Get the rank list container
-    const items = rankList.querySelectorAll('li'); // Get all rank options
-
-    if (!items.length) return false; // If no items, return false (no selection made)
-
-    // Collect the rank order
-    const rankOrder = Array.from(items).map((item, index) => {
-      return {
-        optionIndex: index, // Index of the option (Yellow, Red, etc.)
-        rank: index + 1,     // The rank of the option (1, 2, 3, 4, 5)
-      };
-    });
-
-    // Store the rank order in the userAnswers array
-    userAnswers[currentQuestionIndex] = rankOrder;
-
+    if (!userAnswers[currentQuestionIndex] || userAnswers[currentQuestionIndex].length === 0) {
+      return false; // No ranking done yet
+    }
   }
-  // If it's a slider question, check if a value has been selected
+  // For slider questions, ensure a value is selected
   else if (question.type === 'slider') {
     const slider = document.getElementById('slider');
     if (!slider) return false; // If no slider, return false
     userAnswers[currentQuestionIndex] = slider.value;
-
-  } else {
-    // For other questions (radio buttons)
+  }
+  // For multiple-choice questions, ensure an answer is selected
+  else if (question.type === 'multiple-choice') {
     const selected = document.querySelector('input[name="answer"]:checked');
     if (!selected) return false; // No answer selected, return false
     userAnswers[currentQuestionIndex] = parseInt(selected.value, 10);
   }
 
-  return true; // Return true if answer was saved
+  return true; // Return true if the answer was saved successfully
 }
+
 
 
 // Handle next button click
@@ -196,49 +183,51 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   const results = quizData.results;
 
   // Reset scores before calculating the results
-  const scores = {};
+  const scores = { Top: 0, Switch: 0, Bottom: 0 };
 
   // Calculate the score based on the user's answers
   userAnswers.forEach((answer, index) => {
     const question = quizData.questions[index];
 
-    if (question.type === 'rank') {
-      // If it's a rank question, the answer will be an array of rank positions
-      // The answer is in the format of [{ optionIndex, rank }]
-      answer.forEach((rankObj) => {
-        // Check if the optionIndex exists within the bounds of the options array
-        if (rankObj.optionIndex >= 0 && rankObj.optionIndex < question.options.length) {
-          const option = question.options[rankObj.optionIndex]; // Get the option by index
-          const rankPosition = rankObj.rank; // The rank position (1, 2, 3, etc.)
-
-          // Check if this rank position exists in the option's scores
-          if (option.scores[rankPosition]) {
-            const rankScore = option.scores[rankPosition];
-
-            // Loop through the different results and add their corresponding points
-            for (const result in rankScore) {
-              scores[result] = (scores[result] || 0) + rankScore[result];
-            }
-          } else {
-            console.warn(`Rank position ${rankPosition} is not defined for option:`, option);
-          }
-        } else {
-          console.warn(`Invalid optionIndex ${rankObj.optionIndex} for rank question.`);
-        }
-      });
-
-    } else {
-      // For other types of questions (radio buttons, slider, etc.)
-      const selectedOption = question.options ? question.options[answer] : null;
-
+    // For multiple-choice questions
+    if (question.type === 'multiple-choice') {
+      const selectedOption = question.options[answer];
       if (selectedOption) {
-        // Handle multiple choice or slider answers
         for (const result in selectedOption.scores) {
           scores[result] = (scores[result] || 0) + selectedOption.scores[result];
         }
-      } else {
-        console.warn(`Invalid option for question type ${question.type}.`);
       }
+    }
+
+    // For slider questions
+    else if (question.type === 'slider') {
+      const scoreImpact = question.scoreImpact;
+      const sliderValue = parseInt(answer); // The slider answer is saved as a value
+      if (sliderValue >= question.min && sliderValue <= question.max) {
+        for (const result in scoreImpact) {
+          const scoreRange = scoreImpact[result];
+          const score = scoreRange[0] + ((scoreRange[1] - scoreRange[0]) * (sliderValue - question.min)) / (question.max - question.min);
+          scores[result] = (scores[result] || 0) + score;
+        }
+      }
+    }
+
+    // For rank questions
+    else if (question.type === 'rank') {
+      answer.forEach((rankObj) => {
+        // Ensure the rank is within bounds
+        if (rankObj.optionIndex >= 0 && rankObj.optionIndex < question.options.length) {
+          const option = question.options[rankObj.optionIndex];
+          const rankPosition = rankObj.rank;
+
+          if (option.scores[rankPosition]) {
+            const rankScore = option.scores[rankPosition];
+            for (const result in rankScore) {
+              scores[result] = (scores[result] || 0) + rankScore[result];
+            }
+          }
+        }
+      });
     }
   });
 
