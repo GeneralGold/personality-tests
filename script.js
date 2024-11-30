@@ -185,7 +185,7 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   // Initialize scores for the results (using dynamic labels from JSON)
   const scores = {};
   Object.keys(results).forEach(result => {
-    scores[result] = 0; // Initialize all result categories (Top, Switch, Bottom, etc.)
+    scores[result] = 0; // Initialize all result categories
   });
 
   // Calculate the score based on the user's answers
@@ -218,7 +218,6 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     // For rank questions
     else if (question.type === 'rank') {
       answer.forEach((rankObj) => {
-        // Ensure the rank is within bounds
         if (rankObj.optionIndex >= 0 && rankObj.optionIndex < question.options.length) {
           const option = question.options[rankObj.optionIndex];
           const rankPosition = rankObj.rank;
@@ -238,15 +237,17 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   const totalScore = Object.values(scores).reduce((total, score) => total + score, 0);
 
   // Calculate percentages for each result
-  const percentages = {};
-  Object.keys(scores).forEach(result => {
-    percentages[result] = (scores[result] / totalScore) * 100;
-  });
+  const percentages = Object.keys(scores).map(result => ({
+    name: result,
+    percentage: (scores[result] / totalScore) * 100,
+    value: scores[result]
+  }));
 
-  // Find the result with the highest score
-  const highestScoreResult = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+  // Sort results by percentage in descending order
+  percentages.sort((a, b) => b.percentage - a.percentage);
 
   // Display the result
+  const highestScoreResult = percentages[0].name;
   const questionContainer = document.getElementById("question-container");
   questionContainer.innerHTML = `
     <h2>Your Result: ${highestScoreResult}</h2>
@@ -261,16 +262,23 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   // Ensure the canvas element exists before initializing the chart
   const ctx = document.getElementById('result-pie-chart').getContext('2d');
   if (ctx) {
+    // Generate a list of 15 distinct colors for the pie chart
+    const colors = [
+      '#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#FFD633', '#33FFF9',
+      '#A633FF', '#FFB533', '#33FF90', '#FF3365', '#33A6FF', '#75FF33',
+      '#FF8333', '#B833FF', '#33FFDE'
+    ];
+
     // Create the pie chart
     const resultPieChart = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: Object.keys(scores), // Use dynamic result names (Top, Switch, Bottom, etc.)
+        labels: percentages.map(p => p.name), // Use sorted result names
         datasets: [{
           label: 'Result Distribution',
-          data: Object.values(percentages), // Use dynamic percentage values
-          backgroundColor: ['#FF5733', '#33FF57', '#3357FF'], // Dynamic colors for each result
-          borderColor: ['#FF5733', '#33FF57', '#3357FF'],
+          data: percentages.map(p => p.percentage), // Use sorted percentages
+          backgroundColor: colors.slice(0, percentages.length), // Assign colors dynamically
+          borderColor: colors.slice(0, percentages.length),
           borderWidth: 1
         }]
       },
@@ -295,9 +303,9 @@ document.getElementById("submit-btn").addEventListener("click", () => {
 
     // Display the percentages below the chart
     const percentageContainer = document.getElementById('pie-chart-percentages');
-    Object.keys(percentages).forEach(result => {
+    percentages.forEach(p => {
       const percentageText = document.createElement('p');
-      percentageText.innerHTML = `${result}: ${percentages[result].toFixed(2)}%`;
+      percentageText.innerHTML = `${p.name}: ${p.percentage.toFixed(2)}%`;
       percentageContainer.appendChild(percentageText);
     });
   } else {
