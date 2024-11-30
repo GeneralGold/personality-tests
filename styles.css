@@ -95,39 +95,24 @@ button:hover {
   margin-top: 20px;
 }
 
-/* Styling for the ranking list container */
 #rank-list {
+  list-style-type: none;
   padding: 0;
-  margin: 0 auto;
-  max-width: 300px;
-  /* No border or outline for the list itself */
-  background-color: transparent;  /* No background for the list container */
+  margin: 0;
 }
 
-/* Styling for individual ranking items */
 #rank-list li {
-  border: 1px solid #ddd;  /* Border around each individual item */
+  border: 1px solid #ddd;
   padding: 10px;
   margin: 5px 0;
-  background-color: #f9f9f9;  /* Light background for each individual item */
-  color: #333;  /* Dark text color for readability */
-  font-size: 18px;  /* Larger text for better visibility */
+  background-color: #fff;
   cursor: grab;
-  transition: background-color 0.3s ease, color 0.3s ease; /* Added text color transition */
-  border-radius: 5px;  /* Slightly rounded corners for each item */
+  font-size: 18px;
 }
 
-/* Highlight when dragging a ranking item */
 #rank-list li:active {
-  background-color: #eaeaea;  /* Slightly darker background when dragging */
   cursor: grabbing;
-  color: #000;  /* Darker text when dragging for better contrast */
-}
-
-/* Add hover effect to individual ranking items */
-#rank-list li:hover {
-  background-color: #dfe6e9;  /* Slightly darker background on hover */
-  color: #000;  /* Darker text on hover */
+  background-color: #f0f0f0;
 }
 
 /* For smaller screens */

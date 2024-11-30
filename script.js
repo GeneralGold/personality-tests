@@ -71,7 +71,16 @@ function renderQuestion(data) {
     <h2>${question.text}</h2>
     ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
     <div>
-      ${question.options
+      ${question.type === 'rank' ? `
+        <ul id="rank-list">
+          ${question.options
+            .map(
+              (option, index) => `
+                <li data-index="${index}" class="rank-option">${option.text}</li>`
+            )
+            .join('')}
+        </ul>
+      ` : question.options
         ? question.options
             .map(
               (option, index) => `
@@ -89,21 +98,22 @@ function renderQuestion(data) {
       <p id="slider-value">${question.min}</p>
       <p>${question.description || ''}</p>
     ` : ''}
-    ${question.type === 'ranking' ? `
-      <ul id="rank-list">
-        ${question.options
-          ? question.options
-              .map((option, index) => `
-                <li id="rank-item-${index}" draggable="true">
-                  ${option.text}
-                </li>
-              `)
-              .join("")
-          : ""}
-      </ul>
-      <p>${question.description || ''}</p>
-    ` : ''}
   `;
+
+  // Add functionality to make the rank list draggable
+  if (question.type === 'rank') {
+    const rankList = document.getElementById("rank-list");
+    if (rankList) {
+      new Sortable(rankList, {
+        animation: 150,  // smooth animation for reordering
+        onEnd(evt) {
+          // Save the new order
+          const newOrder = Array.from(rankList.children).map(child => child.dataset.index);
+          userAnswers[currentQuestionIndex] = newOrder;
+        }
+      });
+    }
+  }
 
   // Update button visibility
   const prevBtn = document.getElementById("prev-btn");
@@ -122,77 +132,20 @@ function renderQuestion(data) {
       sliderValue.textContent = event.target.value;
     });
   }
-
-  // Initialize drag-and-drop for ranking options if applicable
-  if (question.type === 'ranking') {
-    initRanking();
-  }
-}
-
-// Initialize the draggable ranking functionality
-function initRanking() {
-  const rankList = document.getElementById("rank-list");
-
-  // Add event listener to handle dragging start
-  rankList.addEventListener('dragstart', (event) => {
-    // Store the dragged item
-    event.dataTransfer.setData('text/plain', event.target.id);
-    event.target.style.opacity = 0.5; // Make the dragged item semi-transparent
-  });
-
-  // Add event listener to handle dragging end
-  rankList.addEventListener('dragend', (event) => {
-    event.target.style.opacity = ""; // Reset opacity when dragging ends
-  });
-
-  // Make the list items droppable
-  const listItems = document.querySelectorAll('#rank-list li');
-  listItems.forEach(item => {
-    item.addEventListener('dragover', (event) => {
-      event.preventDefault();  // Allow dropping by preventing the default action
-    });
-
-    item.addEventListener('dragenter', (event) => {
-      event.preventDefault();  // Allow the drop
-      event.target.style.backgroundColor = '#f1f1f1';  // Highlight the target item
-    });
-
-    item.addEventListener('dragleave', (event) => {
-      event.target.style.backgroundColor = '';  // Remove highlight when dragging leaves
-    });
-
-    item.addEventListener('drop', (event) => {
-      event.preventDefault();
-      const draggedId = event.dataTransfer.getData('text/plain');
-      const draggedItem = document.getElementById(draggedId);
-      const targetItem = event.target;
-
-      // If the dragged item is not the target item, reorder the items
-      if (draggedItem !== targetItem) {
-        const allItems = [...rankList.children];
-        const draggedIndex = allItems.indexOf(draggedItem);
-        const targetIndex = allItems.indexOf(targetItem);
-
-        // Remove dragged item and insert it before the target item
-        if (draggedIndex < targetIndex) {
-          rankList.insertBefore(draggedItem, targetItem.nextSibling);
-        } else {
-          rankList.insertBefore(draggedItem, targetItem);
-        }
-      }
-
-      // Remove the highlight from the target item
-      targetItem.style.backgroundColor = '';
-    });
-  });
 }
 
 // Save the selected answer
 function saveAnswer() {
   const question = JSON.parse(localStorage.getItem('quizData')).questions[currentQuestionIndex];
 
+  // If it's a rank question, check if the order has been changed
+  if (question.type === 'rank') {
+    if (!userAnswers[currentQuestionIndex] || userAnswers[currentQuestionIndex].length === 0) {
+      return false; // No ranking done yet
+    }
+  }
   // If it's a slider question, check if a value has been selected
-  if (question.type === 'slider') {
+  else if (question.type === 'slider') {
     const slider = document.getElementById('slider');
     if (!slider) return false; // If no slider, return false
     userAnswers[currentQuestionIndex] = slider.value;
@@ -238,6 +191,20 @@ document.getElementById("submit-btn").addEventListener("click", () => {
       for (const result in selectedOption.scores) {
         scores[result] = (scores[result] || 0) + selectedOption.scores[result];
       }
+    } else if (question.type === 'rank') {
+      // Handle rank question scoring
+      const rankScores = question.options.map((option, index) => {
+        const rank = userAnswers[index] + 1; // Rank starts from 1
+        return { option: option.text, rank };
+      });
+
+      rankScores.forEach(({ option, rank }) => {
+        if (rank <= question.options.length) {
+          // Apply score based on rank (as described in the original requirement)
+          const points = question.rankScoring[rank - 1];  // Adjust based on rank scoring
+          scores[option] = (scores[option] || 0) + points;
+        }
+      });
     }
   });
 
@@ -251,4 +218,9 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     <img src="${quizData.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 100%; height: auto;">
     <p>${quizData.results[highestScoreResult].description}</p>
   `;
+
+  // Hide the next, previous, and submit buttons
+  document.getElementById("next-btn").style.display = "none";
+  document.getElementById("prev-btn").style.display = "none";
+  document.getElementById("submit-btn").style.display = "none";
 });
