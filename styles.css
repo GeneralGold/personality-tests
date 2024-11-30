@@ -95,6 +95,27 @@ button:hover {
   margin-top: 20px;
 }
 
+#rank-list {
+  padding: 0;
+  margin: 0 auto;
+  max-width: 300px;
+}
+
+#rank-list li {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #f9f9f9;
+  cursor: grab;
+  transition: background-color 0.3s ease;
+}
+
+#rank-list li:active {
+  background-color: #eaeaea;
+  cursor: grabbing;
+}
+
+
 /* For smaller screens */
 @media (max-width: 600px) {
   #logo-link {
