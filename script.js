@@ -206,17 +206,24 @@ document.getElementById("submit-btn").addEventListener("click", () => {
       // If it's a rank question, the answer will be an array of rank positions
       // The answer is in the format of [{ optionIndex, rank }]
       answer.forEach((rankObj) => {
-        const option = question.options[rankObj.optionIndex]; // Get the option by index
-        const rankPosition = rankObj.rank; // The rank position (1, 2, 3, etc.)
+        // Check if the optionIndex exists within the bounds of the options array
+        if (rankObj.optionIndex >= 0 && rankObj.optionIndex < question.options.length) {
+          const option = question.options[rankObj.optionIndex]; // Get the option by index
+          const rankPosition = rankObj.rank; // The rank position (1, 2, 3, etc.)
 
-        // Check if this rank position exists in the option's scores
-        if (option.scores[rankPosition]) {
-          const rankScore = option.scores[rankPosition];
+          // Check if this rank position exists in the option's scores
+          if (option.scores[rankPosition]) {
+            const rankScore = option.scores[rankPosition];
 
-          // Loop through the different results and add their corresponding points
-          for (const result in rankScore) {
-            scores[result] = (scores[result] || 0) + rankScore[result];
+            // Loop through the different results and add their corresponding points
+            for (const result in rankScore) {
+              scores[result] = (scores[result] || 0) + rankScore[result];
+            }
+          } else {
+            console.warn(`Rank position ${rankPosition} is not defined for option:`, option);
           }
+        } else {
+          console.warn(`Invalid optionIndex ${rankObj.optionIndex} for rank question.`);
         }
       });
 
@@ -229,6 +236,8 @@ document.getElementById("submit-btn").addEventListener("click", () => {
         for (const result in selectedOption.scores) {
           scores[result] = (scores[result] || 0) + selectedOption.scores[result];
         }
+      } else {
+        console.warn(`Invalid option for question type ${question.type}.`);
       }
     }
   });
