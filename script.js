@@ -140,15 +140,29 @@ function saveAnswer() {
 
   // If it's a rank question, check if the order has been changed
   if (question.type === 'rank') {
-    if (!userAnswers[currentQuestionIndex] || userAnswers[currentQuestionIndex].length === 0) {
-      return false; // No ranking done yet
-    }
+    const rankList = document.getElementById('rank-list'); // Get the rank list container
+    const items = rankList.querySelectorAll('li'); // Get all rank options
+
+    if (!items.length) return false; // If no items, return false (no selection made)
+
+    // Collect the rank order
+    const rankOrder = Array.from(items).map((item, index) => {
+      return {
+        optionIndex: index, // Index of the option (Yellow, Red, etc.)
+        rank: index + 1,     // The rank of the option (1, 2, 3, 4, 5)
+      };
+    });
+
+    // Store the rank order in the userAnswers array
+    userAnswers[currentQuestionIndex] = rankOrder;
+
   }
   // If it's a slider question, check if a value has been selected
   else if (question.type === 'slider') {
     const slider = document.getElementById('slider');
     if (!slider) return false; // If no slider, return false
     userAnswers[currentQuestionIndex] = slider.value;
+
   } else {
     // For other questions (radio buttons)
     const selected = document.querySelector('input[name="answer"]:checked');
@@ -158,6 +172,7 @@ function saveAnswer() {
 
   return true; // Return true if answer was saved
 }
+
 
 // Handle next button click
 document.getElementById("next-btn").addEventListener("click", () => {
@@ -186,27 +201,31 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   // Calculate the score based on the user's answers
   userAnswers.forEach((answer, index) => {
     const question = quizData.questions[index];
-    const selectedOption = question.options ? question.options[answer] : null;
 
-    if (selectedOption) {
-      // If it's a ranking question, check for the nested scores
-      if (question.type === 'rank') {
-        const rank = answer + 1; // Rank is based on the index of the answer
+    if (question.type === 'rank') {
+      // If it's a rank question, the answer will be an array of rank positions
+      // The answer is in the format of [{ optionIndex, rank }]
+      answer.forEach((rankObj) => {
+        const option = question.options[rankObj.optionIndex]; // Get the option by index
+        const rankPosition = rankObj.rank; // The rank position (1, 2, 3, etc.)
 
-        // Loop through the scores for each rank position in the option
-        for (const rankPosition in selectedOption.scores) {
-          if (rankPosition === String(rank)) {
-            // Apply the score for the selected rank
-            const rankScore = selectedOption.scores[rankPosition];
+        // Check if this rank position exists in the option's scores
+        if (option.scores[rankPosition]) {
+          const rankScore = option.scores[rankPosition];
 
-            // Loop through the different results and add their corresponding points
-            for (const result in rankScore) {
-              scores[result] = (scores[result] || 0) + rankScore[result];
-            }
+          // Loop through the different results and add their corresponding points
+          for (const result in rankScore) {
+            scores[result] = (scores[result] || 0) + rankScore[result];
           }
         }
-      } else {
-        // Handle other types of questions (e.g., multiple choice, slider, etc.)
+      });
+
+    } else {
+      // For other types of questions (radio buttons, slider, etc.)
+      const selectedOption = question.options ? question.options[answer] : null;
+
+      if (selectedOption) {
+        // Handle multiple choice or slider answers
         for (const result in selectedOption.scores) {
           scores[result] = (scores[result] || 0) + selectedOption.scores[result];
         }
