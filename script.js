@@ -41,13 +41,17 @@ fetch(quizFile)
 // Render the landing page
 function renderLandingPage(data) {
   const questionContainer = document.getElementById("question-container");
+
+  // Use the landingImage directly from the JSON without adding './images/'
+  const landingImagePath = data.landingImage;
+
   questionContainer.innerHTML = `
     <div id="landing-page">
       <h1>${data.title}</h1>
       ${data.description ? `<p>${data.description}</p>` : ""}
       ${
-        data.landingImage
-          ? `<img src="./images/${data.landingImage}" alt="Quiz Image" style="max-width: 80%; height: auto; margin: 10px auto; display: block;">`
+        landingImagePath
+          ? `<img src="${landingImagePath}" alt="Quiz Image" style="max-width: 80%; height: auto; margin: 10px auto; display: block;">`
           : ""
       }
       <button id="start-btn">Start Quiz</button>
@@ -58,6 +62,7 @@ function renderLandingPage(data) {
     renderQuestion();
   });
 }
+
 
 // Render the current question
 function renderQuestion() {
@@ -77,7 +82,7 @@ function renderQuestion() {
     <h2>${question.text}</h2>
     ${
       question.image
-        ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">`
+        ? `<img src="${question.image}" alt="Question Image" style="max-width: 80%; height: auto; margin: 10px 0;">`
         : ""
     }
     <div id="answer-container">
@@ -103,7 +108,11 @@ function renderQuestion() {
           ? `
         <ul id="sortable">
           ${question.options
-            .map((option) => `<li class="sortable-item" data-value="${option.text}">${option.text}</li>`)
+            .map(
+              (option) => `
+            <li class="sortable-item" data-value="${option.text}">${option.text}</li>
+          `
+            )
             .join("")}
         </ul>
       `
@@ -127,6 +136,10 @@ function renderQuestion() {
     const sortable = document.getElementById("sortable");
     new Sortable(sortable, {
       animation: 150,
+      onEnd: () => {
+        // Update the order of items after drag
+        saveAnswer(); // Save the answer when ranking is done
+      },
     });
   }
 
