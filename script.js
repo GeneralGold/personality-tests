@@ -150,10 +150,13 @@ function renderRankQuestion(question) {
     const listItem = document.createElement("li");
     listItem.textContent = option.text;
     listItem.draggable = true;
-    listItem.style.border = "1px solid #ccc";
+    listItem.style.border = "1px solid white";
     listItem.style.padding = "10px";
     listItem.style.margin = "5px 0";
     listItem.style.cursor = "grab";
+    listItem.style.backgroundColor = "#fff";
+    listItem.style.color = "#3498db"; // Blue text for contrast
+    listItem.style.borderRadius = "5px";
     listContainer.appendChild(listItem);
   });
 
@@ -211,7 +214,7 @@ function saveRankAnswer(question) {
 
   const rankedOrder = [...rankList.children].map((item, index) => ({
     text: item.textContent,
-    rank: index + 1
+    rank: index + 1,
   }));
 
   userAnswers[currentQuestionIndex] = rankedOrder;
@@ -262,4 +265,8 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     <img src="${quizData.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 80%; height: auto; margin: 10px auto; display: block;">
     <p>${quizData.results[highestScoreResult].description}</p>
   `;
+
+  // Remove navigation buttons
+  document.getElementById("prev-btn").style.display = "none";
+  document.getElementById("submit-btn").style.display = "none";
 });
