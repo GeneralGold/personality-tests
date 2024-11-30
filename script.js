@@ -182,8 +182,11 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   const quizData = JSON.parse(localStorage.getItem('quizData')); // Ensure quizData is loaded correctly
   const results = quizData.results;
 
-  // Reset scores before calculating the results
-  const scores = { Top: 0, Switch: 0, Bottom: 0 };
+  // Initialize scores for the results (using dynamic labels from JSON)
+  const scores = {};
+  Object.keys(results).forEach(result => {
+    scores[result] = 0; // Initialize all result categories (Top, Switch, Bottom, etc.)
+  });
 
   // Calculate the score based on the user's answers
   userAnswers.forEach((answer, index) => {
@@ -231,6 +234,15 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     }
   });
 
+  // Calculate total score to compute percentages
+  const totalScore = Object.values(scores).reduce((total, score) => total + score, 0);
+
+  // Calculate percentages for each result
+  const percentages = {};
+  Object.keys(scores).forEach(result => {
+    percentages[result] = (scores[result] / totalScore) * 100;
+  });
+
   // Find the result with the highest score
   const highestScoreResult = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
 
@@ -240,7 +252,41 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     <h2>Your Result: ${highestScoreResult}</h2>
     <img src="${quizData.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 100%; height: auto;">
     <p>${quizData.results[highestScoreResult].description}</p>
+    <canvas id="result-pie-chart" width="400" height="400"></canvas>
   `;
+
+  // Create the pie chart
+  const ctx = document.getElementById('result-pie-chart').getContext('2d');
+  const resultPieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: Object.keys(scores), // Use dynamic result names (Top, Switch, Bottom, etc.)
+      datasets: [{
+        label: 'Result Distribution',
+        data: Object.values(percentages), // Use dynamic percentage values
+        backgroundColor: ['#FF5733', '#33FF57', '#3357FF'], // Dynamic colors for each result
+        borderColor: ['#FF5733', '#33FF57', '#3357FF'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(tooltipItem) {
+              const label = tooltipItem.label;
+              const value = tooltipItem.raw.toFixed(2) + '%';
+              return label + ': ' + value;
+            }
+          }
+        },
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+  });
 
   // Hide the next, previous, and submit buttons
   document.getElementById("next-btn").style.display = "none";
