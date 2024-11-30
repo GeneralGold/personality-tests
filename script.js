@@ -189,10 +189,21 @@ function initRanking() {
 
 // Save the selected answer
 function saveAnswer() {
-  const selected = document.querySelector('input[name="answer"]:checked');
-  if (!selected && currentQuestionIndex !== 1) return false; // No answer selected, but allow skipping slider
-  userAnswers[currentQuestionIndex] = parseInt(selected ? selected.value : document.getElementById('slider').value, 10);
-  return true;
+  const question = JSON.parse(localStorage.getItem('quizData')).questions[currentQuestionIndex];
+
+  // If it's a slider question, check if a value has been selected
+  if (question.type === 'slider') {
+    const slider = document.getElementById('slider');
+    if (!slider) return false; // If no slider, return false
+    userAnswers[currentQuestionIndex] = slider.value;
+  } else {
+    // For other questions (radio buttons)
+    const selected = document.querySelector('input[name="answer"]:checked');
+    if (!selected) return false; // No answer selected, return false
+    userAnswers[currentQuestionIndex] = parseInt(selected.value, 10);
+  }
+
+  return true; // Return true if answer was saved
 }
 
 // Handle next button click
