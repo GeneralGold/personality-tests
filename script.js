@@ -1,4 +1,4 @@
-// Load quiz data
+// Load JSON data
 const urlParams = new URLSearchParams(window.location.search);
 const quizName = urlParams.get('quiz'); // Get the quiz name from the URL
 const quizFile = `./quiz/${quizName}.json`; // Path to the quiz JSON
@@ -6,6 +6,7 @@ const quizFile = `./quiz/${quizName}.json`; // Path to the quiz JSON
 // Variables
 let currentQuestionIndex = 0;
 let userAnswers = [];
+let quizStarted = false; // Track if the quiz has started
 const scores = {}; // Keep track of scores for each result
 
 // Fetch quiz data
@@ -27,32 +28,38 @@ fetch(quizFile)
       scores[result] = 0;
     }
 
-    // Render the landing page content in the question-container
-    const questionContainer = document.getElementById("question-container");
-    if (data.landingImage) {
-      questionContainer.innerHTML = `
-        <img src="${data.landingImage}" alt="Landing Image" style="width: 100%; max-height: 300px;">
-        <h1>${data.title}</h1>
-        <p>${data.description || ''}</p>
-        <button id="start-btn">Start Quiz</button>
-      `;
-    } else {
-      questionContainer.innerHTML = `
-        <h1>${data.title}</h1>
-        <p>${data.description || ''}</p>
-        <button id="start-btn">Start Quiz</button>
-      `;
-    }
+    // Store the quiz data in local storage to use later for submitting
+    localStorage.setItem('quizData', JSON.stringify(data));
 
-    // Set up event listener for the start button
-    document.getElementById("start-btn").addEventListener("click", () => {
-      renderQuestion(data);
-    });
+    // Render the landing page
+    renderLandingPage(data);
   })
   .catch(error => {
     console.error("Error loading quiz data:", error);
     alert("Failed to load quiz data.");
   });
+
+// Render the landing page
+function renderLandingPage(data) {
+  const questionContainer = document.getElementById("question-container");
+  questionContainer.innerHTML = `
+    <h1>${data.title}</h1>
+    ${data.landingImage ? `<img src="${data.landingImage}" alt="Quiz Image" style="max-width: 100%; height: auto;">` : ""}
+    <p>${data.description || ''}</p>
+    <button id="play-btn" style="margin-top: 20px; padding: 10px 20px; font-size: 16px;">Play</button>
+  `;
+
+  // Add event listener to the play button
+  document.getElementById("play-btn").addEventListener("click", () => {
+    quizStarted = true;
+    renderQuestion(JSON.parse(localStorage.getItem('quizData')));
+  });
+
+  // Hide navigation buttons initially
+  document.getElementById("prev-btn").style.display = "none";
+  document.getElementById("next-btn").style.display = "none";
+  document.getElementById("submit-btn").style.display = "none";
+}
 
 // Render the current question and answers
 function renderQuestion(data) {
@@ -62,21 +69,16 @@ function renderQuestion(data) {
   // Render question text and image (if available)
   questionContainer.innerHTML = `
     <h2>${question.text}</h2>
-    ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 60%; height: auto; margin: 10px 0;">` : ""}
+    ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
     <div id="options-container">
-      ${question.type === "rank" ? renderRankOptions(question) :
-        question.type === "slider" ? renderSlider(question) :
+      ${question.type === 'rank' ? renderRankOptions(question) :
+        question.type === 'slider' ? renderSlider(question) :
         question.options.map((option, index) => `
-        <label>
-          <input type="radio" name="answer" value="${index}" />
-          ${option.text}
-        </label><br/>
-      `).join('')}
-    </div>
-    <div class="button-container">
-      <button id="prev-btn" style="display: ${currentQuestionIndex === 0 ? 'none' : 'inline-block'}">Previous</button>
-      <button id="next-btn" style="display: ${currentQuestionIndex < data.questions.length - 1 ? 'inline-block' : 'none'}">Next</button>
-      <button id="submit-btn" style="display: ${currentQuestionIndex === data.questions.length - 1 ? 'inline-block' : 'none'}">Submit</button>
+          <label>
+            <input type="radio" name="answer" value="${index}" />
+            ${option.text}
+          </label><br/>
+        `).join('')}
     </div>
   `;
 
@@ -89,40 +91,20 @@ function renderQuestion(data) {
   nextBtn.style.display = currentQuestionIndex < data.questions.length - 1 ? "inline-block" : "none";
   submitBtn.style.display = currentQuestionIndex === data.questions.length - 1 ? "inline-block" : "none";
 
-  // Attach event listeners to buttons
-  document.getElementById("next-btn").addEventListener("click", () => {
-    if (!saveAnswer()) {
-      alert("Please select an answer before proceeding.");
-      return;
-    }
-
-    // Move to the next question
-    currentQuestionIndex++;
-    if (currentQuestionIndex < data.questions.length) {
-      renderQuestion(data);
-    }
-  });
-
-  document.getElementById("prev-btn").addEventListener("click", () => {
-    currentQuestionIndex--;
-    renderQuestion(data);
-  });
-
-  document.getElementById("submit-btn").addEventListener("click", () => {
-    if (!saveAnswer()) {
-      alert("Please select an answer before proceeding.");
-      return;
-    }
-
-    // Calculate the final score based on the answers
-    calculateScore(data);
-  });
+  // Add slider value update functionality
+  if (question.type === 'slider') {
+    const slider = document.getElementById("slider");
+    const sliderValue = document.getElementById("slider-value");
+    slider.addEventListener('input', (event) => {
+      sliderValue.textContent = event.target.value;
+    });
+  }
 }
 
-// Render rank question (options should be draggable)
+// Render rank options (for drag-and-drop)
 function renderRankOptions(question) {
   return `
-    <ul id="rank-options" style="list-style: none; padding: 0;">
+    <ul id="rank-list" style="list-style: none; padding: 0; margin: 0 auto; max-width: 300px;">
       ${question.options.map((option, index) => `
         <li draggable="true" class="rank-option" data-index="${index}">
           ${option.text}
@@ -132,90 +114,96 @@ function renderRankOptions(question) {
   `;
 }
 
-// Render slider question
-function renderSlider(question) {
-  return `
-    <label for="slider">${question.text}</label>
-    <input type="range" id="slider" name="slider" min="${question.min}" max="${question.max}" value="${question.min}">
-    <span id="slider-value">${question.min}</span>
-  `;
-}
-
 // Initialize drag-and-drop functionality for rank options
 document.addEventListener('DOMContentLoaded', () => {
-  const rankOptions = document.querySelectorAll('.rank-option');
-  rankOptions.forEach(option => {
-    option.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', e.target.dataset.index);
-    });
-    option.addEventListener('dragover', (e) => {
-      e.preventDefault();
-    });
-    option.addEventListener('drop', (e) => {
-      e.preventDefault();
-      const draggedIndex = e.dataTransfer.getData('text/plain');
-      const targetIndex = e.target.dataset.index;
+  const rankList = document.getElementById("rank-list");
+  if (rankList) {
+    const rankOptions = rankList.querySelectorAll(".rank-option");
+    rankOptions.forEach(option => {
+      option.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', e.target.dataset.index);
+      });
+      option.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+      option.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const draggedIndex = e.dataTransfer.getData('text/plain');
+        const targetIndex = e.target.dataset.index;
 
-      const optionsContainer = document.getElementById('rank-options');
-      const draggedOption = optionsContainer.children[draggedIndex];
-      const targetOption = optionsContainer.children[targetIndex];
+        const optionsContainer = document.getElementById('rank-list');
+        const draggedOption = optionsContainer.children[draggedIndex];
+        const targetOption = optionsContainer.children[targetIndex];
 
-      optionsContainer.insertBefore(draggedOption, targetOption);
+        optionsContainer.insertBefore(draggedOption, targetOption);
+      });
     });
-  });
+  }
 });
 
-// Save the selected answer (for radio, rank, or slider options)
+// Save the selected answer
 function saveAnswer() {
   const selected = document.querySelector('input[name="answer"]:checked');
-  if (selected) {
-    userAnswers[currentQuestionIndex] = selected.value;
-  } else if (document.getElementById("slider")) {
-    const sliderValue = document.getElementById("slider").value;
-    userAnswers[currentQuestionIndex] = sliderValue;
-  } else if (document.querySelectorAll('.rank-option').length) {
+  if (!selected && currentQuestionIndex !== 1) return false; // No answer selected, but allow skipping slider
+  if (document.getElementById("slider")) {
+    userAnswers[currentQuestionIndex] = document.getElementById("slider").value;
+  } else if (document.getElementById("rank-list")) {
     const rankOptions = document.querySelectorAll('.rank-option');
     userAnswers[currentQuestionIndex] = Array.from(rankOptions).map(option => option.dataset.index);
   } else {
-    return false; // No answer selected
+    userAnswers[currentQuestionIndex] = selected ? parseInt(selected.value, 10) : null;
   }
   return true;
 }
 
-// Calculate the final score based on the answers
-function calculateScore(data) {
+// Handle next button click
+document.getElementById("next-btn").addEventListener("click", () => {
+  if (!saveAnswer()) {
+    alert("Please select an answer before proceeding.");
+    return;
+  }
+  currentQuestionIndex++;
+  renderQuestion(JSON.parse(localStorage.getItem('quizData')));
+});
+
+// Handle previous button click
+document.getElementById("prev-btn").addEventListener("click", () => {
+  currentQuestionIndex--;
+  renderQuestion(JSON.parse(localStorage.getItem('quizData')));
+});
+
+// Handle quiz submission
+document.getElementById("submit-btn").addEventListener("click", () => {
+  const quizData = JSON.parse(localStorage.getItem('quizData')); // Ensure quizData is loaded correctly
+  const results = quizData.results;
+
+  // Reset scores before calculating the results
+  const scores = {};
+
+  // Calculate the score based on the user's answers
   userAnswers.forEach((answer, index) => {
-    const question = data.questions[index];
-    if (question.type === 'rank') {
-      // Calculate score for ranking question
-      answer.forEach((rank, idx) => {
-        const points = question.options[rank].points;
-        scores[question.options[rank].result] += points;
-      });
-    } else {
-      // Calculate score for radio buttons and slider
-      const option = question.options[answer];
-      if (question.type === 'slider') {
-        scores[option.result] += parseInt(answer); // Slider is numeric
-      } else {
-        scores[option.result] += option.points;
+    const question = quizData.questions[index];
+    const selectedOption = question.options ? question.options[answer] : null;
+    if (selectedOption) {
+      for (const result in selectedOption.scores) {
+        scores[result] = (scores[result] || 0) + selectedOption.scores[result];
       }
     }
   });
 
-  // Show the result in the question-container
-  displayResult(data);
-}
+  // Find the result with the highest score
+  const highestScoreResult = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
 
-// Display the result after quiz completion
-function displayResult(data) {
+  // Display the result
   const questionContainer = document.getElementById("question-container");
   questionContainer.innerHTML = `
-    <h2>Your Result:</h2>
-    <p>${data.results[Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b)]}</p>
+    <h2>Your Result: ${highestScoreResult}</h2>
+    <img src="${quizData.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 100%; height: auto;">
+    <p>${quizData.results[highestScoreResult].description}</p>
   `;
 
-  // Hide the buttons after the result is shown
-  const buttonContainer = document.querySelector(".button-container");
-  if (buttonContainer) buttonContainer.style.display = "none";
-}
+  // Hide the next, previous, and submit buttons
+  document.getElementById("next-btn").style.display = "none";
+  document.getElementById("prev-btn").style.display = "none";
+  document.getElementById("submit-btn").style.display = "none";
+});
