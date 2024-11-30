@@ -64,22 +64,45 @@ function renderLandingPage(data) {
 // Render the current question and answers
 function renderQuestion(data) {
   const question = data.questions[currentQuestionIndex];
-  const questionContainer = document.getElementById("question-container");
 
   // Render question text and image (if available)
+  const questionContainer = document.getElementById("question-container");
   questionContainer.innerHTML = `
     <h2>${question.text}</h2>
     ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 100%; height: auto; margin: 10px 0;">` : ""}
-    <div id="options-container">
-      ${question.type === 'rank' ? renderRankOptions(question) :
-        question.type === 'slider' ? renderSlider(question) :
-        question.options.map((option, index) => `
-          <label>
-            <input type="radio" name="answer" value="${index}" />
-            ${option.text}
-          </label><br/>
-        `).join('')}
+    <div>
+      ${question.options
+        ? question.options
+            .map(
+              (option, index) => `
+                <label>
+                  <input type="radio" name="answer" value="${index}" />
+                  ${option.text}
+                </label><br/>
+              `
+            )
+            .join("")
+        : ""}
     </div>
+    ${question.type === 'slider' ? `
+      <input type="range" id="slider" min="${question.min}" max="${question.max}" step="${question.step}" value="${question.min}" />
+      <p id="slider-value">${question.min}</p>
+      <p>${question.description || ''}</p>
+    ` : ''}
+    ${question.type === 'ranking' ? `
+      <ul id="rank-list">
+        ${question.options
+          ? question.options
+              .map((option, index) => `
+                <li id="rank-item-${index}" draggable="true">
+                  ${option.text}
+                </li>
+              `)
+              .join("")
+          : ""}
+      </ul>
+      <p>${question.description || ''}</p>
+    ` : ''}
   `;
 
   // Update button visibility
@@ -99,60 +122,76 @@ function renderQuestion(data) {
       sliderValue.textContent = event.target.value;
     });
   }
-}
 
-// Render rank options (for drag-and-drop)
-function renderRankOptions(question) {
-  return `
-    <ul id="rank-list" style="list-style: none; padding: 0; margin: 0 auto; max-width: 300px;">
-      ${question.options.map((option, index) => `
-        <li draggable="true" class="rank-option" data-index="${index}">
-          ${option.text}
-        </li>
-      `).join('')}
-    </ul>
-  `;
-}
-
-// Initialize drag-and-drop functionality for rank options
-document.addEventListener('DOMContentLoaded', () => {
-  const rankList = document.getElementById("rank-list");
-  if (rankList) {
-    const rankOptions = rankList.querySelectorAll(".rank-option");
-    rankOptions.forEach(option => {
-      option.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', e.target.dataset.index);
-      });
-      option.addEventListener('dragover', (e) => {
-        e.preventDefault();
-      });
-      option.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const draggedIndex = e.dataTransfer.getData('text/plain');
-        const targetIndex = e.target.dataset.index;
-
-        const optionsContainer = document.getElementById('rank-list');
-        const draggedOption = optionsContainer.children[draggedIndex];
-        const targetOption = optionsContainer.children[targetIndex];
-
-        optionsContainer.insertBefore(draggedOption, targetOption);
-      });
-    });
+  // Initialize drag-and-drop for ranking options if applicable
+  if (question.type === 'ranking') {
+    initRanking();
   }
-});
+}
+
+// Initialize the draggable ranking functionality
+function initRanking() {
+  const rankList = document.getElementById("rank-list");
+
+  // Add event listener to handle dragging start
+  rankList.addEventListener('dragstart', (event) => {
+    // Store the dragged item
+    event.dataTransfer.setData('text/plain', event.target.id);
+    event.target.style.opacity = 0.5; // Make the dragged item semi-transparent
+  });
+
+  // Add event listener to handle dragging end
+  rankList.addEventListener('dragend', (event) => {
+    event.target.style.opacity = ""; // Reset opacity when dragging ends
+  });
+
+  // Make the list items droppable
+  const listItems = document.querySelectorAll('#rank-list li');
+  listItems.forEach(item => {
+    item.addEventListener('dragover', (event) => {
+      event.preventDefault();  // Allow dropping by preventing the default action
+    });
+
+    item.addEventListener('dragenter', (event) => {
+      event.preventDefault();  // Allow the drop
+      event.target.style.backgroundColor = '#f1f1f1';  // Highlight the target item
+    });
+
+    item.addEventListener('dragleave', (event) => {
+      event.target.style.backgroundColor = '';  // Remove highlight when dragging leaves
+    });
+
+    item.addEventListener('drop', (event) => {
+      event.preventDefault();
+      const draggedId = event.dataTransfer.getData('text/plain');
+      const draggedItem = document.getElementById(draggedId);
+      const targetItem = event.target;
+
+      // If the dragged item is not the target item, reorder the items
+      if (draggedItem !== targetItem) {
+        const allItems = [...rankList.children];
+        const draggedIndex = allItems.indexOf(draggedItem);
+        const targetIndex = allItems.indexOf(targetItem);
+
+        // Remove dragged item and insert it before the target item
+        if (draggedIndex < targetIndex) {
+          rankList.insertBefore(draggedItem, targetItem.nextSibling);
+        } else {
+          rankList.insertBefore(draggedItem, targetItem);
+        }
+      }
+
+      // Remove the highlight from the target item
+      targetItem.style.backgroundColor = '';
+    });
+  });
+}
 
 // Save the selected answer
 function saveAnswer() {
   const selected = document.querySelector('input[name="answer"]:checked');
   if (!selected && currentQuestionIndex !== 1) return false; // No answer selected, but allow skipping slider
-  if (document.getElementById("slider")) {
-    userAnswers[currentQuestionIndex] = document.getElementById("slider").value;
-  } else if (document.getElementById("rank-list")) {
-    const rankOptions = document.querySelectorAll('.rank-option');
-    userAnswers[currentQuestionIndex] = Array.from(rankOptions).map(option => option.dataset.index);
-  } else {
-    userAnswers[currentQuestionIndex] = selected ? parseInt(selected.value, 10) : null;
-  }
+  userAnswers[currentQuestionIndex] = parseInt(selected ? selected.value : document.getElementById('slider').value, 10);
   return true;
 }
 
@@ -201,9 +240,4 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     <img src="${quizData.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 100%; height: auto;">
     <p>${quizData.results[highestScoreResult].description}</p>
   `;
-
-  // Hide the next, previous, and submit buttons
-  document.getElementById("next-btn").style.display = "none";
-  document.getElementById("prev-btn").style.display = "none";
-  document.getElementById("submit-btn").style.display = "none";
 });
