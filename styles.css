@@ -100,15 +100,13 @@ button:hover {
   padding: 0;
   margin: 0 auto;
   max-width: 300px;
-  /* No background for the list itself, to allow individual items to stand out */
-  border: 2px solid #3498db;  /* Border around the list */
-  border-radius: 10px;  /* Rounded corners for the list */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Light shadow to make the list pop */
+  /* No border or outline for the list itself */
+  background-color: transparent;  /* No background for the list container */
 }
 
 /* Styling for individual ranking items */
 #rank-list li {
-  border: 1px solid #ddd;
+  border: 1px solid #ddd;  /* Border around each individual item */
   padding: 10px;
   margin: 5px 0;
   background-color: #f9f9f9;  /* Light background for each individual item */
@@ -131,7 +129,6 @@ button:hover {
   background-color: #dfe6e9;  /* Slightly darker background on hover */
   color: #000;  /* Darker text on hover */
 }
-
 
 /* For smaller screens */
 @media (max-width: 600px) {
