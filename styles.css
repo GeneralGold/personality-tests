@@ -112,11 +112,15 @@ button:hover {
   margin: 5px 0;
   border-radius: 12px;  /* Rounded corners */
   cursor: grab;
+  font-size: 18px;
+  color: #333;  /* Darker color for text to ensure readability */
+  font-weight: bold;  /* Optional: Make the text bold for better readability */
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 #rank-list li:active {
   background-color: #eaeaea;  /* Darken background when clicked */
+  color: #3498db;  /* Change text color on drag to a blue color */
   cursor: grabbing;
 }
 
