@@ -252,7 +252,10 @@ document.getElementById("submit-btn").addEventListener("click", () => {
     <h2>Your Result: ${highestScoreResult}</h2>
     <img src="${quizData.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 100%; height: auto;">
     <p>${quizData.results[highestScoreResult].description}</p>
-    <canvas id="result-pie-chart" width="400" height="400"></canvas>
+    <div style="text-align: center;">
+      <canvas id="result-pie-chart" width="300" height="300"></canvas>
+      <div id="pie-chart-percentages" style="margin-top: 15px;"></div>
+    </div>
   `;
 
   // Ensure the canvas element exists before initializing the chart
@@ -288,6 +291,14 @@ document.getElementById("submit-btn").addEventListener("click", () => {
           }
         }
       }
+    });
+
+    // Display the percentages below the chart
+    const percentageContainer = document.getElementById('pie-chart-percentages');
+    Object.keys(percentages).forEach(result => {
+      const percentageText = document.createElement('p');
+      percentageText.innerHTML = `${result}: ${percentages[result].toFixed(2)}%`;
+      percentageContainer.appendChild(percentageText);
     });
   } else {
     console.error('Error: The canvas element is missing or cannot be accessed.');
