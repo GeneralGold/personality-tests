@@ -187,24 +187,30 @@ document.getElementById("submit-btn").addEventListener("click", () => {
   userAnswers.forEach((answer, index) => {
     const question = quizData.questions[index];
     const selectedOption = question.options ? question.options[answer] : null;
-    if (selectedOption) {
-      for (const result in selectedOption.scores) {
-        scores[result] = (scores[result] || 0) + selectedOption.scores[result];
-      }
-    } else if (question.type === 'rank') {
-      // Handle rank question scoring
-      const rankScores = question.options.map((option, index) => {
-        const rank = userAnswers[index] + 1; // Rank starts from 1
-        return { option: option.text, rank };
-      });
 
-      rankScores.forEach(({ option, rank }) => {
-        if (rank <= question.options.length) {
-          // Apply score based on rank (as described in the original requirement)
-          const points = question.rankScoring[rank - 1];  // Adjust based on rank scoring
-          scores[option] = (scores[option] || 0) + points;
+    if (selectedOption) {
+      // If it's a ranking question, check for the nested scores
+      if (question.type === 'rank') {
+        const rank = answer + 1; // Rank is based on the index of the answer
+
+        // Loop through the scores for each rank position in the option
+        for (const rankPosition in selectedOption.scores) {
+          if (rankPosition === String(rank)) {
+            // Apply the score for the selected rank
+            const rankScore = selectedOption.scores[rankPosition];
+
+            // Loop through the different results and add their corresponding points
+            for (const result in rankScore) {
+              scores[result] = (scores[result] || 0) + rankScore[result];
+            }
+          }
         }
-      });
+      } else {
+        // Handle other types of questions (e.g., multiple choice, slider, etc.)
+        for (const result in selectedOption.scores) {
+          scores[result] = (scores[result] || 0) + selectedOption.scores[result];
+        }
+      }
     }
   });
 
