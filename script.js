@@ -1,13 +1,14 @@
+// Load quiz data
+const urlParams = new URLSearchParams(window.location.search);
+const quizName = urlParams.get('quiz'); // Get the quiz name from the URL
+const quizFile = `./quiz/${quizName}.json`; // Path to the quiz JSON
+
+// Variables
 let currentQuestionIndex = 0;
 let userAnswers = [];
-let scores = {}; // To track results
+const scores = {}; // Keep track of scores for each result
 
-// Load the quiz data dynamically from the URL query parameter
-const urlParams = new URLSearchParams(window.location.search);
-const quizName = urlParams.get('quiz'); // Get quiz name from the URL
-const quizFile = `./quiz/${quizName}.json`; // Path to the quiz JSON file
-
-// Fetch quiz data from the JSON file
+// Fetch quiz data
 fetch(quizFile)
   .then(response => {
     if (!response.ok) {
@@ -18,114 +19,66 @@ fetch(quizFile)
     return response.json();
   })
   .then(data => {
-    // Set quiz title and description dynamically
+    // Set the title dynamically from the JSON file
     document.title = data.title || 'Quiz';
 
-    // Display landing image and description
-    const landingImage = data.landingImage || '';  // Ensure this is the correct key for landing image
-    const landingTitle = data.title || '';
-    const landingDescription = data.description || '';
-
-    const landingContainer = document.getElementById("landing-container");
-    landingContainer.innerHTML = `
-      <img src="/images/${landingImage}" alt="Landing Image" style="max-width: 100%; height: auto; margin-bottom: 20px;">
-      <h2>${landingTitle}</h2>
-      <p>${landingDescription}</p>
-      <button id="start-btn">Start Quiz</button>
-    `;
-
-    document.getElementById("start-btn").addEventListener("click", function() {
-      // Start quiz by rendering the first question
-      renderQuestion(data);
-      landingContainer.style.display = "none";
-      document.getElementById("question-container").style.display = "block";
-    });
-
-    // Initialize scores for results
+    // Initialize results scores
     for (const result in data.results) {
       scores[result] = 0;
     }
+
+    // Render the landing page content in the question-container
+    const questionContainer = document.getElementById("question-container");
+    if (data.landingImage) {
+      questionContainer.innerHTML = `
+        <img src="${data.landingImage}" alt="Landing Image" style="width: 100%; max-height: 300px;">
+        <h1>${data.title}</h1>
+        <p>${data.description || ''}</p>
+        <button id="start-btn">Start Quiz</button>
+      `;
+    } else {
+      questionContainer.innerHTML = `
+        <h1>${data.title}</h1>
+        <p>${data.description || ''}</p>
+        <button id="start-btn">Start Quiz</button>
+      `;
+    }
+
+    // Set up event listener for the start button
+    document.getElementById("start-btn").addEventListener("click", () => {
+      renderQuestion(data);
+    });
   })
   .catch(error => {
     console.error("Error loading quiz data:", error);
     alert("Failed to load quiz data.");
   });
 
-// Function to render the current question
+// Render the current question and answers
 function renderQuestion(data) {
   const question = data.questions[currentQuestionIndex];
   const questionContainer = document.getElementById("question-container");
 
-  let questionContent = `
+  // Render question text and image (if available)
+  questionContainer.innerHTML = `
     <h2>${question.text}</h2>
-    ${question.image ? `<img src="/images/${question.image}" alt="Question Image" style="max-width: 80%; height: auto; margin: 10px auto; display: block;">` : ""}
+    ${question.image ? `<img src="${question.image}" alt="Question Image" style="max-width: 60%; height: auto; margin: 10px 0;">` : ""}
+    <div id="options-container">
+      ${question.type === "rank" ? renderRankOptions(question) :
+        question.type === "slider" ? renderSlider(question) :
+        question.options.map((option, index) => `
+        <label>
+          <input type="radio" name="answer" value="${index}" />
+          ${option.text}
+        </label><br/>
+      `).join('')}
+    </div>
+    <div class="button-container">
+      <button id="prev-btn" style="display: ${currentQuestionIndex === 0 ? 'none' : 'inline-block'}">Previous</button>
+      <button id="next-btn" style="display: ${currentQuestionIndex < data.questions.length - 1 ? 'inline-block' : 'none'}">Next</button>
+      <button id="submit-btn" style="display: ${currentQuestionIndex === data.questions.length - 1 ? 'inline-block' : 'none'}">Submit</button>
+    </div>
   `;
-
-  // Handle different question types
-  if (question.type === "multiple-choice") {
-    questionContent += `
-      <div>
-        ${question.options.map((option, index) => `
-          <label>
-            <input type="radio" name="answer" value="${index}" />
-            ${option.text}
-          </label><br/>
-        `).join("")}
-      </div>
-    `;
-  } else if (question.type === "slider") {
-    questionContent += `
-      <input type="range" id="slider" min="${question.min}" max="${question.max}" step="${question.step}" />
-      <p id="slider-value">${question.min}</p>
-      <p>${question.description || ''}</p>
-    `;
-  } else if (question.type === "rank") {
-    questionContent += `
-      <ul id="ranking-list" style="list-style-type: none; padding: 0;">
-        ${question.options.map((option, index) => `
-          <li class="draggable" id="option-${index}" draggable="true">${option.text}</li>
-        `).join("")}
-      </ul>
-      <p>Drag to rank the options from top to bottom.</p>
-    `;
-  }
-
-  // Render the question content into the container
-  questionContainer.innerHTML = questionContent;
-
-  // Add draggable functionality for ranking question
-  if (question.type === "rank") {
-    const draggables = document.querySelectorAll('.draggable');
-    const container = document.getElementById('ranking-list');
-
-    draggables.forEach(draggable => {
-      draggable.addEventListener('dragstart', (e) => {
-        e.target.classList.add('dragging');
-      });
-
-      draggable.addEventListener('dragend', () => {
-        const draggedItem = document.querySelector('.dragging');
-        draggedItem.classList.remove('dragging');
-      });
-    });
-
-    container.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      const afterElement = getDragAfterElement(container, e.clientY);
-      const draggable = document.querySelector('.dragging');
-      if (afterElement == null) {
-        container.appendChild(draggable);
-      } else {
-        container.insertBefore(draggable, afterElement);
-      }
-    });
-
-    container.addEventListener('drop', (e) => {
-      e.preventDefault();
-      const draggable = document.querySelector('.dragging');
-      container.appendChild(draggable);
-    });
-  }
 
   // Update button visibility
   const prevBtn = document.getElementById("prev-btn");
@@ -136,100 +89,133 @@ function renderQuestion(data) {
   nextBtn.style.display = currentQuestionIndex < data.questions.length - 1 ? "inline-block" : "none";
   submitBtn.style.display = currentQuestionIndex === data.questions.length - 1 ? "inline-block" : "none";
 
-  // Handle slider update
-  if (question.type === 'slider') {
-    const slider = document.getElementById("slider");
-    const sliderValue = document.getElementById("slider-value");
-    slider.addEventListener('input', (event) => {
-      sliderValue.textContent = event.target.value;
-    });
-  }
-}
-
-// Function to determine the order of elements based on drag position
-function getDragAfterElement(container, y) {
-  const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')];
-  return draggableElements.reduce((closest, child) => {
-    const box = child.getBoundingClientRect();
-    const offset = y - box.top - box.height / 2;
-    if (offset < 0 && offset > closest.offset) {
-      return { offset, element: child };
-    } else {
-      return closest;
+  // Attach event listeners to buttons
+  document.getElementById("next-btn").addEventListener("click", () => {
+    if (!saveAnswer()) {
+      alert("Please select an answer before proceeding.");
+      return;
     }
-  }, { offset: Number.NEGATIVE_INFINITY }).element;
+
+    // Move to the next question
+    currentQuestionIndex++;
+    if (currentQuestionIndex < data.questions.length) {
+      renderQuestion(data);
+    }
+  });
+
+  document.getElementById("prev-btn").addEventListener("click", () => {
+    currentQuestionIndex--;
+    renderQuestion(data);
+  });
+
+  document.getElementById("submit-btn").addEventListener("click", () => {
+    if (!saveAnswer()) {
+      alert("Please select an answer before proceeding.");
+      return;
+    }
+
+    // Calculate the final score based on the answers
+    calculateScore(data);
+  });
 }
 
-// Save the selected answer
-function saveAnswer() {
-  const question = data.questions[currentQuestionIndex];
-  if (question.type === 'rank') {
-    // For rank, get the order of the answers
-    const order = [];
-    const rankedOptions = document.querySelectorAll('.draggable');
-    rankedOptions.forEach((option, index) => {
-      order.push(option.textContent.trim());
+// Render rank question (options should be draggable)
+function renderRankOptions(question) {
+  return `
+    <ul id="rank-options" style="list-style: none; padding: 0;">
+      ${question.options.map((option, index) => `
+        <li draggable="true" class="rank-option" data-index="${index}">
+          ${option.text}
+        </li>
+      `).join('')}
+    </ul>
+  `;
+}
+
+// Render slider question
+function renderSlider(question) {
+  return `
+    <label for="slider">${question.text}</label>
+    <input type="range" id="slider" name="slider" min="${question.min}" max="${question.max}" value="${question.min}">
+    <span id="slider-value">${question.min}</span>
+  `;
+}
+
+// Initialize drag-and-drop functionality for rank options
+document.addEventListener('DOMContentLoaded', () => {
+  const rankOptions = document.querySelectorAll('.rank-option');
+  rankOptions.forEach(option => {
+    option.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', e.target.dataset.index);
     });
-    userAnswers[currentQuestionIndex] = order;
+    option.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+    option.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const draggedIndex = e.dataTransfer.getData('text/plain');
+      const targetIndex = e.target.dataset.index;
+
+      const optionsContainer = document.getElementById('rank-options');
+      const draggedOption = optionsContainer.children[draggedIndex];
+      const targetOption = optionsContainer.children[targetIndex];
+
+      optionsContainer.insertBefore(draggedOption, targetOption);
+    });
+  });
+});
+
+// Save the selected answer (for radio, rank, or slider options)
+function saveAnswer() {
+  const selected = document.querySelector('input[name="answer"]:checked');
+  if (selected) {
+    userAnswers[currentQuestionIndex] = selected.value;
+  } else if (document.getElementById("slider")) {
+    const sliderValue = document.getElementById("slider").value;
+    userAnswers[currentQuestionIndex] = sliderValue;
+  } else if (document.querySelectorAll('.rank-option').length) {
+    const rankOptions = document.querySelectorAll('.rank-option');
+    userAnswers[currentQuestionIndex] = Array.from(rankOptions).map(option => option.dataset.index);
   } else {
-    const selected = document.querySelector('input[name="answer"]:checked');
-    if (!selected) return false; // No answer selected
-    userAnswers[currentQuestionIndex] = parseInt(selected.value, 10);
+    return false; // No answer selected
   }
   return true;
 }
 
-// Handle next button click
-document.getElementById("next-btn").addEventListener("click", () => {
-  if (!saveAnswer()) {
-    alert("Please select an answer before proceeding.");
-    return;
-  }
-  currentQuestionIndex++;
-  renderQuestion(data);
-});
-
-// Handle previous button click
-document.getElementById("prev-btn").addEventListener("click", () => {
-  currentQuestionIndex--;
-  renderQuestion(data);
-});
-
-// Handle quiz submission
-document.getElementById("submit-btn").addEventListener("click", () => {
-  // Process the results based on user answers
-  const resultContainer = document.getElementById("result-container");
-  const results = data.results;
-
-  // Tally up the scores based on user answers
+// Calculate the final score based on the answers
+function calculateScore(data) {
   userAnswers.forEach((answer, index) => {
     const question = data.questions[index];
     if (question.type === 'rank') {
-      const selectedOrder = answer;  // The ranked order
-      question.options.forEach((option, i) => {
-        const rankScore = option.scores[selectedOrder.indexOf(option.text)];
-        scores[option.text] = (scores[option.text] || 0) + rankScore;
+      // Calculate score for ranking question
+      answer.forEach((rank, idx) => {
+        const points = question.options[rank].points;
+        scores[question.options[rank].result] += points;
       });
     } else {
-      const selectedOption = question.options[answer];
-      if (selectedOption) {
-        for (const result in selectedOption.scores) {
-          scores[result] = (scores[result] || 0) + selectedOption.scores[result];
-        }
+      // Calculate score for radio buttons and slider
+      const option = question.options[answer];
+      if (question.type === 'slider') {
+        scores[option.result] += parseInt(answer); // Slider is numeric
+      } else {
+        scores[option.result] += option.points;
       }
     }
   });
 
-  // Display result
-  const highestScoreResult = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-  resultContainer.innerHTML = `
-    <h2>Your Result: ${highestScoreResult}</h2>
-    <img src="/images/${data.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 100%; height: auto;">
-    <p>${data.results[highestScoreResult].description}</p>
+  // Show the result in the question-container
+  displayResult(data);
+}
+
+// Display the result after quiz completion
+function displayResult(data) {
+  const questionContainer = document.getElementById("question-container");
+  questionContainer.innerHTML = `
+    <h2>Your Result:</h2>
+    <p>${data.results[Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b)]}</p>
   `;
 
-  // Remove buttons
-  document.getElementById("submit-btn").style.display = "none";
-  document.getElementById("prev-btn").style.display = "none";
-  document.getElementById("next-btn").style.display = "none";
-});
+  // Hide the buttons after the result is shown
+  const buttonContainer = document.querySelector(".button-container");
+  if (buttonContainer) buttonContainer.style.display = "none";
+}
