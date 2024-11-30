@@ -47,7 +47,7 @@ function renderLandingPage(data) {
       ${data.description ? `<p>${data.description}</p>` : ""}
       ${
         data.landingImage
-          ? `<img src="/images/${data.landingImage}" alt="Quiz Image" style="max-width: 80%; height: auto; margin: 10px auto; display: block;">`
+          ? `<img src="./images/${data.landingImage}" alt="Quiz Image" style="max-width: 80%; height: auto; margin: 10px auto; display: block;">`
           : ""
       }
       <button id="start-btn">Start Quiz</button>
@@ -223,4 +223,9 @@ function renderResult() {
     <img src="${data.results[highestScoreResult].image}" alt="${highestScoreResult}" style="max-width: 100%; height: auto;">
     <p>${data.results[highestScoreResult].description}</p>
   `;
+
+  // Remove unnecessary buttons
+  document.getElementById("prev-btn").style.display = "none";
+  document.getElementById("next-btn").style.display = "none";
+  document.getElementById("submit-btn").style.display = "none";
 }
