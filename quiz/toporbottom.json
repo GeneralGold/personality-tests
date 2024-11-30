@@ -1,0 +1,81 @@
+{
+  "title": "Top or Bottom Test",
+  "description": "Are you a tippity top or a bouncy bottom? HAHAHAHAH SEE I DID ALLITERATION WASN'T THAT FUNNY?!?",
+  "landingImage": "images/toporbottom.png",
+  "type": "two-options",
+  "questions": [
+    {
+      "text": "Which of these clothes do you prefer?",
+      "type": "multiple-choice",
+      "image": "images/clothes.png",
+      "options": [
+        { "text": "Dress", "scores": { "Top": 0, "Switch": 1, "Bottom": 2 } },
+        { "text": "Cute crop-top and shorts", "scores": { "Top": 0, "Switch": 2, "Bottom": 1 } },
+        { "text": "T-shirt and trousers", "scores": { "Top": 1, "Switch": 2, "Bottom": 0 } },
+        { "text": "Farmer Outfit Yee-haw!", "scores": { "Top": 2, "Switch": 0, "Bottom": 0 } }
+      ]
+    },
+    {
+      "text": "How gay are you?",
+      "type": "slider",
+      "image": "images/gay.png",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "description": "1 being straight, 5 being gay",
+      "scoreImpact": {
+        "Top": [5, 3],
+        "Bottom": [3, 5],
+        "Switch": [2, 4]
+      }
+    },
+    {
+      "text": "Which of these voices is the most attractive?",
+      "type": "multiple-choice",
+      "image": "images/voice.png",
+      "options": [
+        { "text": "Soft and gentle", "scores": { "Top": 1, "Switch": 1, "Bottom": 1 } },
+        { "text": "Low and commanding", "scores": { "Top": 0, "Switch": 1, "Bottom": 2 } },
+        { "text": "Dreamy", "scores": { "Top": 0, "Switch": 2, "Bottom": 1 } }
+      ]
+    },
+    {
+      "text": "Do you like spicy food?",
+      "type": "multiple-choice",
+      "image": "images/spicy.png",
+      "options": [
+        { "text": "Yes", "scores": { "Top": 2, "Switch": 1, "Bottom": 0 } },
+        { "text": "If it's not too spicy...", "scores": { "Top": 0, "Switch": 1, "Bottom": 1 } },
+        { "text": "Hell nah", "scores": { "Top": 0, "Switch": 1, "Bottom": 2 } }
+      ]
+    },
+    {
+      "text": "How hot is this image?",
+      "type": "slider",
+      "image": "images/hopefullynottos.png",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "description": "1 being painfully awful, 5 being unable to stop hawk tuahing on that thang",
+      "scoreImpact": {
+        "Top": [3, 4],
+        "Bottom": [2, 5],
+        "Switch": [1, 5]
+      }
+    },
+  ],
+  "results": {
+    "Top": {
+      "image": "images/top.png",
+      "description": "You are a top! Get ready to ground-pound..."
+    },
+    "Switch": {
+      "image": "images/switch.png",
+      "description": "You are a switch! How average of you..."
+    },
+    "Bottom": {
+      "image": "images/bottom.png",
+      "description": "You are a bottom! Don't worry, I'm sure *someone* will love you..."
+    }
+  }
+}
