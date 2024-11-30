@@ -95,27 +95,33 @@ button:hover {
   margin-top: 20px;
 }
 
+/* Styling for the ranking options */
 #rank-list {
-  list-style-type: none;
+  list-style-type: none;  /* Remove default list bullets */
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;  /* Space between options */
 }
 
 #rank-list li {
-  border: 1px solid #ddd;
+  background-color: #fff;  /* White background for each option */
+  border: 1px solid #ddd;  /* Light border around the option */
   padding: 10px;
   margin: 5px 0;
-  background-color: #fff; /* Light background for better contrast */
+  border-radius: 12px;  /* Rounded corners */
   cursor: grab;
-  font-size: 18px;
-  color: #333;  /* Darker color for text to ensure readability */
-  font-weight: bold;  /* Optional: Make the text bold for better readability */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 #rank-list li:active {
+  background-color: #eaeaea;  /* Darken background when clicked */
   cursor: grabbing;
-  background-color: #f0f0f0;
-  color: #3498db;  /* Change text color on drag to a blue color */
+}
+
+#rank-list li:hover {
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);  /* Glowing effect on hover */
 }
 
 /* For smaller screens */
