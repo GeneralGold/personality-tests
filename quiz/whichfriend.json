@@ -1,0 +1,158 @@
+{
+  "title": "Which of My Friends Are You?",
+  "description": "There is not a single good result to this test. You WILL be disappointed, embarrassed, and possibly suicidal by the end of this.",
+  "landingImage": "images/friend.png",
+  "type": "two-options",
+  "questions": [
+    {
+      "text": "Do other people find you funny?",
+      "type": "multiple-choice",
+      "image": "images/funny.png",
+      "options": [
+        { "text": "Of course! I am hilarious!", "scores": { "Tom": 5, "Aaron": 5, "Alex": 3, "Cillian": 2, "Val": 0, "Jun": 4, "Luka": 2, "Aoife B": 3, "Patrick": 5, "Ruaidhri": 4 } },
+        { "text": "I think so", "scores": { "Tom": 3, "Aaron": 3, "Alex": 5, "Cillian": 4, "Val": 2, "Jun": 5, "Luka": 3, "Aoife B": 4, "Patrick": 2, "Ruaidhri": 2 } },
+        { "text": "Uhh... maybe not", "scores": { "Tom": 1, "Aaron": 2, "Alex": 3, "Cillian": 4, "Val": 5, "Jun": 2, "Luka": 4, "Aoife B": 3, "Patrick": 3, "Ruaidhri": 3 } },
+        { "text": "Hell no", "scores": { "Tom": 3, "Aaron": 0, "Alex": 2, "Cillian": 1, "Val": 4, "Jun": 1, "Luka": 3, "Aoife B": 2, "Patrick": 4, "Ruaidhri": 5 } }
+      ]
+    },
+    {
+      "text": "How gay are you?",
+      "type": "slider",
+      "image": "images/gay.png",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "description": "1 being straight, 5 being gay",
+      "scoreImpact": {
+        "Tom": [5, -3],
+        "Aaron": [4, 1],
+        "Alex": [5, -1],
+        "Cillian": [5, -2],
+        "Val": [1, 7],
+        "Jun": [5, -1],
+        "Luka": [4, 1],
+        "Aoife B": [2, 7],
+        "Patrick": [3, 5],
+        "Ruaidhri": [1, 7]
+      }
+    },
+    {
+      "text": "What is your opinion on Trump?",
+      "type": "multiple-choice",
+      "image": "images/trump.png",
+      "options": [
+        { "text": "Love that guy", "scores": { "Tom": 3, "Aaron": 5, "Alex": 3, "Cillian": 3, "Val": 1, "Jun": 5, "Luka": 2, "Aoife B": 1, "Patrick": 4, "Ruaidhri": 3 } },
+        { "text": "Dude who cares about him", "scores": { "Tom": 7, "Aaron": 3, "Alex": 5, "Cillian": 4, "Val": 2, "Jun": 1, "Luka": 3, "Aoife B": 2, "Patrick": 3, "Ruaidhri": 1 } },
+        { "text": "Fucking hate him I hope he dies", "scores": { "Tom": 2, "Aaron": 1, "Alex": 3, "Cillian": 2, "Val": 7, "Jun": 2, "Luka": 2, "Aoife B": 6, "Patrick": 2, "Ruaidhri": 5 } }
+      ]
+    },
+    {
+      "text": "Do you like spicy food?",
+      "type": "multiple-choice",
+      "image": "images/spicy.png",
+      "options": [
+        { "text": "Yes", "scores": { "Tom": 5, "Aaron": 6, "Alex": 5, "Cillian": 4, "Val": 3, "Jun": 5, "Luka": 4, "Aoife B": 4, "Patrick": 6, "Ruaidhri": 1 } },
+        { "text": "Hell nah", "scores": { "Tom": 1, "Aaron": 0, "Alex": 0, "Cillian": 2, "Val": 4, "Jun": 1, "Luka": 2, "Aoife B": 2, "Patrick": 0, "Ruaidhri": 6 } }
+      ]
+    },
+    {
+      "type": "rank",
+      "text": "Rank these games from your favorite to least favorite.",
+      "image": "images/games.png",
+      "options": [
+        {
+          "text": "Minecraft",
+          "scores": {
+            "1": {"Cillian": 3, "Luka": 4},
+            "2": {"Cillian": 4, "Luka": 5},
+            "3": {"Cillian": 2, "Luka": 2},
+            "4": {"Cillian": -2, "Luka": -2},
+            "5": {"Cillian": -4, "Luka": -5}
+          }
+        },
+        {
+          "text": "Roblox",
+          "scores": {
+            "1": {"Patrick": 4, "Val": 4},
+            "2": {"Patrick": 3, "Val": 5},
+            "3": {"Patrick": 4, "Val": 3},
+            "4": {"Patrick": -3, "Val": 2},
+            "5": {"Patrick": -5, "Val": -3}
+          }
+        },
+        {
+          "text": "Fortnite",
+          "scores": {
+            "1": {"Tom": 5, "Aaron": 4, "Alex": 4},
+            "2": {"Tom": 4, "Aaron": 5, "Alex": 5},
+            "3": {"Tom": 3, "Aaron": 3, "Alex": 2},
+            "4": {"Tom": -2, "Aaron": -1, "Alex": -2},
+            "5": {"Tom": -5, "Aaron": -4, "Alex": -5}
+          }
+        },
+        {
+          "text": "Hearts of Iron IV",
+          "scores": {
+            "1": {"Ruaidhri": 3},
+            "2": {"Ruaidhri": 4},
+            "3": {"Ruaidhri": 5},
+            "4": {"Ruaidhri": 3},
+            "5": {"Ruaidhri": 2}
+          }
+        },
+        {
+          "text": "The Legend of Zelda",
+          "scores": {
+            "1": {"Jun": 3, "Aoife B": 3},
+            "2": {"Jun": 2, "Aoife B": 4},
+            "3": {"Jun": 5, "Aoife B": 5},
+            "4": {"Jun": -2, "Aoife B": 2},
+            "5": {"Jun": -4, "Aoife B": -2}
+          }
+        }
+      ]
+    }
+  ],
+  "results": {
+    "Tom": {
+      "image": "images/tom.png",
+      "description": "You are Tom! That is an insult..."
+    },
+    "Aaron": {
+      "image": "images/aaron.png",
+      "description": "You are Aaron! This means you are tapped in the head!"
+    },
+    "Alex": {
+      "image": "images/alex.png",
+      "description": "You are Alex! The food question got you..."
+    },
+    "Cillian": {
+      "image": "images/cillian.png",
+      "description": "You are Cillian! Do NOT go near my dog..."
+    },
+    "Luka": {
+      "image": "images/luka.png",
+      "description": "You are Luka! You are placing blocks and shit cuz you're in freaking Minecraft..."
+    },
+    "Val": {
+      "image": "images/val.png",
+      "description": "You are Val! This is most likely the highest form of praise you can get from this test..."
+    },
+    "Jun": {
+      "image": "images/jun.png",
+      "description": "You are Jun! Possibly more tapped in the head than Aaron is..."
+    },
+    "Aoife B": {
+      "image": "images/aoifeb.png",
+      "description": "You are Aoife B! Not my sister, my neighbour..."
+    },
+    "Patrick": {
+      "image": "images/patrick.png",
+      "description": "You are Patrick! Enjoy scoliosis..."
+    },
+    "Ruaidhri": {
+      "image": "images/ruaidhri.png",
+      "description": "You are Ruaidhri! The worst option..."
+    }
+  }
+}
