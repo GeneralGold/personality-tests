@@ -66,6 +66,7 @@
     {
       "type": "rank",
       "text": "Rank these colors from your favorite to least favorite.",
+      "image": "images/favcolours.png",
       "options": [
         {
           "text": "Yellow",
